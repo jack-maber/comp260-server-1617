@@ -19,7 +19,15 @@ class Game
 {
     private Parser parser;
     private Room currentRoom;
-        
+    
+    /**
+     * Main method to start the game.
+     */
+    public static void main(String[] args)
+    {
+    	new Game().play();
+    }
+    
     /**
      * Create the game and initialise its internal map.
      */

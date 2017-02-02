@@ -1,7 +1,7 @@
 
 public class Chunk {
 
-	private int[][] chunk = new int[5][5];
+	private Cell[][] chunk = new Cell[5][5];
 	
-	public int[][] getChunk() { return chunk; };
+	public Cell[][] getCells() { return chunk; };
 }

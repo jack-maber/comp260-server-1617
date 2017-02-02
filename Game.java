@@ -73,8 +73,12 @@ class Game
      */
     public void play() 
     {            
-        printWelcome();
-
+        //printWelcome();
+        
+        Chunk block = new Chunk();
+        
+        System.out.println(block.getChunk()); 
+        
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
                 
@@ -180,3 +184,5 @@ class Game
             return true;  // signal that we want to quit
     }
 }
+
+

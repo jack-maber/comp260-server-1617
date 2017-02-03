@@ -77,6 +77,10 @@ class Game
         
         Chunk block = new Chunk();
         
+        Contents set = new Contents(1);
+        
+        set.setIndex(1);
+        
         System.out.println(block.getCells()[0][0].getCellContent()); 
         
         // Enter the main command loop.  Here we repeatedly read commands and

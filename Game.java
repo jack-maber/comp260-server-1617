@@ -73,8 +73,8 @@ class Game
      */
     public void play() 
     {            
-        Chunk chunk = new Chunk();
-        System.out.println(chunk.getCells());
+    	Map map = new Map();
+        System.out.println(map.getRegions()[0][0].getChunks()[0][0].getCells()[0][0].getCellContent());
         
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.

@@ -73,15 +73,8 @@ class Game
      */
     public void play() 
     {            
-        //printWelcome();
-        
-        Chunk block = new Chunk();
-        
-        Contents set = new Contents(1);
-        
-        set.setIndex(1);
-        
-        System.out.println(block.getCells()[0][0].getCellContent()); 
+        Chunk chunk = new Chunk();
+        System.out.println(chunk.getCells());
         
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.

@@ -4,6 +4,8 @@ public class Region {
 	 * regions should be for large numbers of people
 	*/
 	public Region(){
+		
+		//populates the region
 		for (int x = 0; x < region.length; x++){
 			for (int y = 0; y < region[0].length; y++){
 				region[x][y] = new Chunk();

@@ -3,6 +3,7 @@ public class Character {
 
 	private int x = 0;
 	private int y = 0;
+	private boolean isActive = true;
 	
 	public Character (int initialX, int initialY){
 		setX(initialX);

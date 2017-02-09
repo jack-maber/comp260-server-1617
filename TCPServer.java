@@ -16,7 +16,7 @@ public class TCPServer {
    boolean ServerOn = true;
    public TCPServer() { 
       try {
-         myServerSocket = new ServerSocket(25566);
+         myServerSocket = new ServerSocket(25565);
       } catch(IOException ioe) { 
          System.out.println("Could not create server socket on port 25565. Quitting.");
          System.exit(-1);

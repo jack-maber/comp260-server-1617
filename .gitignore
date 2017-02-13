@@ -2,8 +2,7 @@
 # Created by https://www.gitignore.io/api/eclipse,java
 
 #JDBC git
-!/db/sqlite-jdbc-3.15.1.jar
-!/db/
+!db/sqlite-jdbc-3.15.1.jar
 
 ### Eclipse ###
 

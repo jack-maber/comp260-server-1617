@@ -13,6 +13,10 @@ public class Map {
 	
 	private Cell[][] cells = new Cell[100][100];
 	
+	public void setCell(int x, int y, String content){
+		getCells()[x][y].setCellContent(content);
+		}
+	
 	public Cell[][] getCells() { return cells; }
 	
 	//uncomment if we go back into a tree based system:

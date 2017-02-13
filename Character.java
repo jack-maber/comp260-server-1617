@@ -20,8 +20,5 @@ public class Character {
 
 	// Get Cell that the character is on
 	// Only works within regions
-	public Cell getCell(Chunk mapChunk)
-	{
-		return mapChunk.getCells()[x][y];
-	}
+	
 }

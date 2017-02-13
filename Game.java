@@ -20,6 +20,8 @@ class Game
     private Parser parser;
     private Room currentRoom;
     
+    private Map map;
+    
     /**
      * Main method to start the game.
      */
@@ -33,7 +35,8 @@ class Game
      */
     public Game() 
     {
-        createRooms();
+        //createRooms();
+    	map = new Map();
         parser = new Parser();
     }
 

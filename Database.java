@@ -1,25 +1,27 @@
 import java.sql.*;
-/* TO ALLOW JAVA TO CONNECT TO THE DATABASE YOU NEED TO ADD sqlite-jdbc TO YOUR IMPORTED LIBRARIES. */
+/* TO ALLOW JAVA TO CONNECT TO THE DATABASE YOU NEED TO ADD sqlite-jdbc TO YOUR IMPORTED LIBRARIES. (Currently using version 3.15.1)*/
 /* sqlite-jdbc can be downloaded form here: https://bitbucket.org/xerial/sqlite-jdbc/downloads */
 // http://www.sqlitetutorial.net/sqlite-java/
 
 public class Database {
 	
-	static String cellDatabaseFileName = "cellDatabase";
-	
+	static String highscoresFileName = "highscores.db";
 	
 	// SQL statement that is to be executed
-    static String cellTableData = "CREATE TABLE IF NOT EXISTS highscores (\n"
+    static String highscores = "CREATE TABLE IF NOT EXISTS highscores (\n"
             + "	id integer PRIMARY KEY,\n"
             + "	name text NOT NULL,\n"
+            + " score integer NOT NULL,\n"
             + "	capacity real\n"
             + ");";
+    
+    
+    
 	
 	// Will try and access database, however if the filename does not exist, it will create the database.
-	public static void accessDatabase(String fileName) 
+	public static void accessHighscoreDatabase() 
 	{
-		 
-        String url = "jdbc:sqlite:./db/" + fileName;
+        String url = "jdbc:sqlite:./db/" + highscoresFileName;
  
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {
@@ -28,7 +30,7 @@ public class Database {
                 
                 // Execute SQL statement
                 try (Statement stmt = conn.createStatement()) {
-                    stmt.execute(cellTableData);
+                    stmt.execute(highscores);
                     
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
@@ -39,4 +41,5 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
+    
 }

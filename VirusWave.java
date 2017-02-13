@@ -12,18 +12,27 @@ public class VirusWave extends TimerTask {
 	@Override
 	public void run(){
 		System.out.println("Wave Started");
+		breakTime();
+		System.out.println("Wave completed");
 		completeWave();
-		System.out.println("Wave Ended");
+		
 	}
 	
 	
 	private void completeWave(){
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e){
 			e.printStackTrace();
 		}
 		
+	}
+	private void breakTime(){
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e){
+			e.printStackTrace();
+		}
 	}
 	
 	public static void main(String arg[]){
@@ -31,9 +40,9 @@ public class VirusWave extends TimerTask {
 		
 		Timer timer = new Timer(true);
 		timer.scheduleAtFixedRate(waveTimer, 0, 10*500);
-		System.out.println("Wave Started");
+		//System.out.println("Wave Started");
 		try {
-            Thread.sleep(10000);
+            Thread.sleep(100000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

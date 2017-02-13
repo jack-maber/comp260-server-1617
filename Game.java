@@ -1,4 +1,4 @@
-/**
+/**q
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
  *  can walk around some scenery. That's all. It should really be extended 
@@ -33,7 +33,7 @@ class Game
      */
     public Game() 
     {
-        createRooms();
+        //createRooms();
         parser = new Parser();
     }
 

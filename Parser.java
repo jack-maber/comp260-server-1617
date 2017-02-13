@@ -21,11 +21,13 @@ import java.util.StringTokenizer;
 
 class Parser 
 {
+	public Map map; // holds all the cells that the game is played on
 
     private CommandWords commands;  // holds all valid command words
 
     public Parser() 
     {
+    	map = new Map();
         commands = new CommandWords();
     }
 

@@ -1,4 +1,4 @@
-/**
+/**q
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
  *  can walk around some scenery. That's all. It should really be extended 
@@ -33,7 +33,7 @@ class Game
      */
     public Game() 
     {
-        createRooms();
+        //createRooms();
         parser = new Parser();
     }
 
@@ -75,13 +75,9 @@ class Game
     {            
         //printWelcome();
         
-        Chunk block = new Chunk();
+    	Map map = new Map();
         
-        Contents set = new Contents(1);
-        
-        set.setIndex(1);
-        
-       // System.out.println(block.getCells()[0][0].getCellContent()); 
+        System.out.println(map.getCells()[1][1]); 
         
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.

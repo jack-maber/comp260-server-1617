@@ -2,12 +2,11 @@
 public class Cell {
 	// the smallest form of area
 	public Cell(){
-		cellContent = new Contents(0);
 	}
 	
-	private Contents cellContent;
+	private String cellContent;
 	
-	public void setCellContent() {cellContent.setIndex(0);}
+	public void setCellContent(String content) {cellContent = content;}
 	
-	public int getCellContent() {return cellContent.getIndex();}
+	public String getCellContent() {return cellContent;}
 }

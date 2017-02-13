@@ -8,7 +8,7 @@ static Timer timer;
 
 public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
-    System.out.println("Break begins ");
+    System.out.println("Break has began ");
     int secs = 30;
     int delay = 500;
     int period = 500;
@@ -18,7 +18,7 @@ public static void main(String[] args) {
     timer.scheduleAtFixedRate(new TimerTask() {
 
         public void run() {
-            System.out.println(setInterval());
+            System.out.println("Time left " + setInterval());
 
         }
     }, delay, period);

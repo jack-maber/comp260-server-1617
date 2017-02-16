@@ -4,6 +4,8 @@ public class Character {
 	private int x = 0;
 	// Character Y location
 	private int y = 0;
+	
+	private Cell currentCell;
 
 	// Sets character x and y on initialisation
 	public Character(int initialX, int initialY) {
@@ -25,8 +27,18 @@ public class Character {
 		y = newY;
 	}
 
-
-	// Get Cell that the character is on
-	// Only works within regions
+	public void getCurrentCell(Map map){
+		currentCell = map.getCells()[x][y];
+	}
+	
+	public synchronized void moveCharacter(int moveToX, int moveToY, Map map){
+		if (map.getCells()[moveToX][moveToY].getCellContent() == null && (map.getCells()[moveToX][moveToY].cellTaken))
+		{
+			setPosition(moveToX, moveToY);
+			currentCell.cellTaken = false;
+			currentCell = map.getCells()[x][y];
+			currentCell.cellTaken = true;
+		}
+	}
 
 }

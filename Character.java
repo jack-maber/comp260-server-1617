@@ -32,10 +32,12 @@ public class Character {
 	}
 	
 	public synchronized void moveCharacter(int moveToX, int moveToY, Map map){
-		if (map.getCells()[moveToX][moveToY].getCellContent() == null)
+		if (map.getCells()[moveToX][moveToY].getCellContent() == null && (map.getCells()[moveToX][moveToY].cellTaken))
 		{
 			setPosition(moveToX, moveToY);
+			currentCell.cellTaken = false;
 			currentCell = map.getCells()[x][y];
+			currentCell.cellTaken = true;
 		}
 	}
 

@@ -30,5 +30,13 @@ public class Character {
 	public void getCurrentCell(Map map){
 		currentCell = map.getCells()[x][y];
 	}
+	
+	public void moveCharacter(int moveToX, int moveToY, Map map){
+		if (map.getCells()[moveToX][moveToY].getCellContent() == null)
+		{
+			setPosition(moveToX, moveToY);
+			currentCell = map.getCells()[x][y];
+		}
+	}
 
 }

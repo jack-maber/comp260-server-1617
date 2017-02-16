@@ -9,6 +9,7 @@ public class Character {
 
 	// Sets character x and y on initialisation
 	public Character(int initialX, int initialY) {
+		Thead Char = new Character; //contains the one instance of that person character
 		setPosition(initialX, initialY);
 	}
 
@@ -40,5 +41,5 @@ public class Character {
 			currentCell.cellTaken = true;
 		}
 	}
-
+	
 }

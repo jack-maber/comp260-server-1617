@@ -31,7 +31,7 @@ public class Character {
 		currentCell = map.getCells()[x][y];
 	}
 	
-	public void moveCharacter(int moveToX, int moveToY, Map map){
+	public synchronized void moveCharacter(int moveToX, int moveToY, Map map){
 		if (map.getCells()[moveToX][moveToY].getCellContent() == null)
 		{
 			setPosition(moveToX, moveToY);

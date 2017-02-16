@@ -1,3 +1,6 @@
+//Sourced From http://makemobiapps.blogspot.co.uk/p/multiple-client-server-chat-programming.html
+
+
 
 import java.io.DataInputStream;
 import java.io.PrintStream;

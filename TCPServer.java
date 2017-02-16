@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.ServerSocket;
 
+//Sourced From http://makemobiapps.blogspot.co.uk/p/multiple-client-server-chat-programming.html
+
+
 /*
  * A chat server that delivers public and private messages.
  */

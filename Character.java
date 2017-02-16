@@ -9,7 +9,7 @@ public class Character {
 
 	// Sets character x and y on initialisation
 	public Character(int initialX, int initialY) {
-		Thread[i] Char = new Character;
+		Thread Char = new Character; //contains the one instance of that person character
 		setPosition(initialX, initialY);
 	}
 
@@ -42,5 +42,4 @@ public class Character {
 		}
 	}
 	
-
 }

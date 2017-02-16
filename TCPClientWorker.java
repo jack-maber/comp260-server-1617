@@ -23,9 +23,11 @@ public class TCPClientWorker implements Runnable {
 	}
 
 	public void run() {
-		String line;
+
 		BufferedReader in = null;
 		PrintWriter out = null;
+		String line = in.readLine();
+		
 		try {
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			out = new PrintWriter(client.getOutputStream(), true);
@@ -36,20 +38,21 @@ public class TCPClientWorker implements Runnable {
 
 		while (true) {
 			try {
-				line = in.readLine();
 				// Send data back to client
 				out.println(line);
 				// Append data to text area
 				textArea.append(line);
 			} catch (IOException e) {
 				System.out.println("Read failed");
-				System.exit(-1);
+			
+					System.exit(-1);
 			}
 		}
-	}
-
 	public synchronized void appendText(line){
 	    textArea.append(line);
+	}
+	
+
 	  }
 
 	protected void finalize() {
@@ -62,4 +65,5 @@ public class TCPClientWorker implements Runnable {
 			System.exit(-1);
 		}
 	}
+
 }

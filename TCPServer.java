@@ -83,6 +83,7 @@ class clientThread extends Thread {
   private Socket clientSocket = null;
   private final clientThread[] threads;
   private int maxClientsCount;
+  private Character character = new Character(1,1);
 
   public clientThread(Socket clientSocket, clientThread[] threads) {
     this.clientSocket = clientSocket;

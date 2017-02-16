@@ -9,6 +9,7 @@ public class Character {
 
 	// Sets character x and y on initialisation
 	public Character(int initialX, int initialY) {
+		Thread[i] Char = new Character;
 		setPosition(initialX, initialY);
 	}
 
@@ -40,5 +41,6 @@ public class Character {
 			currentCell.cellTaken = true;
 		}
 	}
+	
 
 }

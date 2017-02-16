@@ -21,16 +21,18 @@ class Command
 {
     private String commandWord;
     private String secondWord;
+    private String thirdWord;
 
     /**
      * Create a command object. First and second word must be supplied, but
      * either one (or both) can be null. The command word should be null to
      * indicate that this was a command that is not recognised by this game.
      */
-    public Command(String firstWord, String secondWord)
+    public Command(String firstWord, String secondWord, String thirdWord)
     {
         commandWord = firstWord;
         this.secondWord = secondWord;
+        this.thirdWord = thirdWord;
     }
 
     /**
@@ -52,6 +54,15 @@ class Command
     }
 
     /**
+     * Return the third word of this command. Returns null if there was no
+     * third word.
+     */
+    public String getThirdWord()
+    {
+        return thirdWord;
+    }
+    
+    /**
      * Return true if this command was not understood.
      */
     public boolean isUnknown()
@@ -65,6 +76,14 @@ class Command
     public boolean hasSecondWord()
     {
         return (secondWord != null);
+    }
+    
+    /**
+     * Return true if the command has a third word.
+     */
+    public boolean hasThirdWord()
+    {
+        return (thirdWord != null);
     }
 }
 

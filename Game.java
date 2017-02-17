@@ -1,3 +1,5 @@
+import db.Tick;
+
 /**q
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -74,19 +76,17 @@ class Game
     public void play() 
     {            
         //printWelcome();
-    	
-    	Map map = Map.getInstance();
-        
-        System.out.println(map.getCells()[1][1].getCellContent()); 
-        
+      
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
                 
         boolean finished = false;
+        Timer timer = Timer.getInstance();
         while (! finished) {
             Command command = parser.getCommand();
             finished = processCommand(command);
         }
+        timer.killTimer();
         System.out.println("Thank you for playing.  Good bye.");
     }
 

@@ -74,9 +74,6 @@ class Game
     public void play() 
     {            
         //printWelcome();
-    	Character character = new Character(0, 0, 0);
-    	
-    	character.map.setCell(1, 1, "words");
     	
     	Map map = Map.getInstance();
         

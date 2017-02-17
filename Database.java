@@ -13,7 +13,7 @@ public class Database {
 
 	// Will try and access database, however if the filename does not exist, it
 	// will create the database.
-	public static void accessHighscoreDatabase() {
+	public static synchronized void accessHighscoreDatabase() {
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
@@ -32,7 +32,7 @@ public class Database {
 		}
 	}
 
-	public static void printHighscoreDatabase() {
+	public static synchronized void printHighscoreDatabase() {
 		String sql = "SELECT id, name, score FROM highscores";
 
 		try (Connection conn = DriverManager.getConnection(url);
@@ -48,7 +48,7 @@ public class Database {
 		}
 	}
 
-	public static void insertHighscoreData(int ID, String name, int score) {
+	public static synchronized void insertHighscoreData(int ID, String name, int score) {
 		String sql = "INSERT INTO highscores(id,name,score) VALUES(?,?,?)";
 
 		try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {

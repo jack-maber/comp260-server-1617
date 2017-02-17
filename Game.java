@@ -74,8 +74,8 @@ class Game
     public void play() 
     {            
         //printWelcome();
-        
-    	Map map = new Map();
+        Map map = Map.getInstance();
+    	
         
         System.out.println(map.getCells()[1][1]); 
         

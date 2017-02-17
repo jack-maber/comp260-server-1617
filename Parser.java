@@ -27,7 +27,6 @@ class Parser
 
     public Parser() 
     {
-    	map = new Map();
         commands = new CommandWords();
     }
 

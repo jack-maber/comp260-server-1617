@@ -1,8 +1,14 @@
+//Attempted singleton class
 
 public class Map {
-	// Attempt to make a singleton class
 	
-	public Map(){
+	private static Map map = new Map();
+	
+	public static Map getInstance() {
+		return map;
+	}
+	
+	private Map(){
 		
 		//populates the map
 		for (int x = 0; x < cells.length; x++){
@@ -14,11 +20,11 @@ public class Map {
 	
 	private Cell[][] cells = new Cell[100][100];
 	
-	public void setCell(int x, int y, String content){
+	protected void setCell(int x, int y, String content){
 		getCells()[x][y].setCellContent(content);
 		}
 	
-	public Cell[][] getCells() { return cells; }
+	protected Cell[][] getCells() { return cells; }
 	
 	//uncomment if we go back into a tree based system:
 	

@@ -81,11 +81,12 @@ class Game
         // execute them until the game is over.
                 
         boolean finished = false;
-        Tick tick = Tick.getInstance();
+        Timer timer = Timer.getInstance();
         while (! finished) {
             Command command = parser.getCommand();
             finished = processCommand(command);
         }
+        timer.killTimer();
         System.out.println("Thank you for playing.  Good bye.");
     }
 

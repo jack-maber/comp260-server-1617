@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /*
@@ -20,9 +21,22 @@ import java.util.StringTokenizer;
  */
 
 
-//making a singleton class so commands can be stacked
+/* making a singleton class so commands can be stacked safely
+ * to be executed each tick
+*/
 class Parser 
 {
+	//stores the commands to be executed on tick
+	private List<String> commandList;
+	
+	protected synchronized List<String> getCommands(){
+		return commandList;
+	}
+	
+	protected synchronized void addToCommands(String command){
+		commandList.add(command);
+	}
+	
 	private static Parser parser = new Parser();
 
     private CommandWords commands;  // holds all valid command words

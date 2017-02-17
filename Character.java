@@ -28,12 +28,20 @@ public class Character {
 		nextY = y;
 	}
 
-	// Getters
-	public int getX() {
+	// Gets character position
+	public int[] getPosition() {
+		int[] array = new int[2];
+		array[0] = x;
+		array[1] = y;
+		return array;
+	}
+	
+	//Gets X value
+	public int getX(){
 		return x;
 	}
-
-	public int getY() {
+	// Gets Y value
+	public int getY(){
 		return y;
 	}
 

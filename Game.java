@@ -74,11 +74,7 @@ class Game
     public void play() 
     {            
         //printWelcome();
-    	
-    	Map map = Map.getInstance();
-        
-        System.out.println(map.getCells()[1][1].getCellContent()); 
-        
+      
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
                 

@@ -19,18 +19,24 @@ import java.util.StringTokenizer;
  * @version 1.0 (February 2002)
  */
 
+
+//making a singleton class so commands can be stacked
 class Parser 
 {
-	public Map map; // holds all the cells that the game is played on
+	private static Parser parser = new Parser();
 
     private CommandWords commands;  // holds all valid command words
 
-    public Parser() 
+    private Parser() 
     {
         commands = new CommandWords();
     }
+    
+    public static Parser getInstance(){
+    	return parser;
+    }
 
-    public Command getCommand() 
+    protected Command getCommand() 
     {
         String inputLine = "";   // will hold the full input line
         String word1;
@@ -78,7 +84,7 @@ class Parser
     /**
      * Print out a list of valid command words.
      */
-    public void showCommands()
+    protected void showCommands()
     {
         commands.showAll();
     }

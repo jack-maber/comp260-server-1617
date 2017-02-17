@@ -118,7 +118,7 @@ class clientThread extends Thread {
 			}
 
 			/* Welcome the new the client. */
-			outStream.println("Welcome " + name + " to our chat room.\nTo leave enter /quit in a new line.");
+			outStream.println("Welcome " + name + "Client ID:" + GetClientThread() + " to our chat room.\nTo leave enter /quit in a new line.");
 			synchronized (this) {
 				for (int i = 0; i < maxClientsCount; i++) {
 					if (threads[i] != null && threads[i] == this) {
@@ -167,7 +167,7 @@ class clientThread extends Thread {
 					synchronized (this) {
 						for (int i = 0; i < maxClientsCount; i++) {
 							if (threads[i] != null && threads[i].clientName != null) {
-								threads[i].outStream.println("<" + name + "> " + line);
+								threads[i].outStream.println("<" + name + "> " + line + commands);
 								commands = line;
 							}
 						}
@@ -203,6 +203,7 @@ class clientThread extends Thread {
 			clientSocket.close();
 		} catch (IOException e) {
 		}
+
 	}
 
 	public String GetCommands() {

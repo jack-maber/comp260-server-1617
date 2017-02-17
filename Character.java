@@ -12,18 +12,21 @@ public class Character {
 	//Potential next Y
 	private int nextY = 0;
 	
+	// Stores which player this character is attached to.
+	private int playerID;
+	
 	private Cell currentCell;
 	
 	private static String movementCommands[] = {
 	        "north", "south", "east", "west"
 	    };
 	
-
 	private Map map = Map.getInstance();
 
 	// Sets character x and y on initialisation
 	public Character(int initialX, int initialY) {
 		setPosition(initialX, initialY);
+		this.playerID = playerID;
 	}
 
 	// Getters

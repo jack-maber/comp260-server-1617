@@ -8,15 +8,14 @@ public class Character {
 	private int y = 0;
 	
 	// Potential next X
-	private int nextX = 0;
+	public int nextX = 0;
 	//Potential next Y
 	private int nextY = 0;
 	
 	// Stores which player this character is attached to.
 	private int playerID;
 	
-	private Cell currentCell;
-	
+	// Possible movement commands
 	private static String movementCommands[] = {
 	        "north", "south", "east", "west"
 	    };
@@ -38,15 +37,15 @@ public class Character {
 		return y;
 	}
 
-	// Setter
+	// Sets character position
 	public void setPosition(int newX, int newY) {
 		x = newX;
 		y = newY;
 	}
 
 	// Checks to see which cell on the map the character is currently on
-	public void getCurrentCell(){
-		currentCell = map.getCells()[x][y];
+	public Cell getCurrentCell(){
+		return map.getCells()[x][y];
 	}
 	
 	// Checks a cell in the map to see if it's free
@@ -58,31 +57,30 @@ public class Character {
 			return false;
 	}	
 	
-	
+	// Checks string is valid and updates character position
 	public synchronized void moveCharacter(String inputMovement){
-		if (inputMovement == movementCommands[0])
+		if (inputMovement == "north")
 		{
 			nextX += 1;
 		}
-		else if (inputMovement == movementCommands[1])
+		else if (inputMovement == "south")
 		{
 			nextX -= 1;
 		}
-		else if (inputMovement == movementCommands[3])
+		else if (inputMovement == "east")
 		{
 			nextY += 1;
 		}
-		else if (inputMovement == movementCommands[4])
+		else if (inputMovement == "west")
 		{
 			nextY -= 1;
 		}
-		
+
 		if (checkForFreeCell())
 		{
+			getCurrentCell().cellTaken = false;
 			setPosition(nextX, nextY);
-			currentCell.cellTaken = false;
-			currentCell = map.getCells()[x][y];
-			currentCell.cellTaken = true;
+			getCurrentCell().cellTaken = true;
 		}
 	}
 	

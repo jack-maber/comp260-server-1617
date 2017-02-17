@@ -1,5 +1,3 @@
-import java.util.HashMap;
-
 public class Character {
 
 	// Character X location

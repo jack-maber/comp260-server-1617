@@ -34,7 +34,7 @@ class Game
     public Game() 
     {
         //createRooms();
-        parser = new Parser();
+        parser = Parser.getInstance();
     }
 
     /**
@@ -74,10 +74,13 @@ class Game
     public void play() 
     {            
         //printWelcome();
-        Map map = Map.getInstance();
+    	Character character = new Character(0, 0, 0);
     	
+    	character.map.setCell(1, 1, "words");
+    	
+    	Map map = Map.getInstance();
         
-        System.out.println(map.getCells()[1][1]); 
+        System.out.println(map.getCells()[1][1].getCellContent()); 
         
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.

@@ -14,7 +14,7 @@ public class Character {
 	
 	HashMap movementCommands = new HashMap(); 
 	
-	Map map = Map.getInstance();
+	public Map map = Map.getInstance();
 
 	// Sets character x and y on initialisation
 	public Character(int initialX, int initialY, int playerID) {

@@ -1,5 +1,6 @@
 
 public class Map {
+	// Attempt to make a singleton class
 	
 	public Map(){
 		

@@ -49,7 +49,7 @@ public class TCPServer {
         int i = 0;
         for (i = 0; i < maxClientsCount; i++) {
           if (threads[i] == null) {
-            (threads[i] = new clientThread(clientSocket, threads)).start();
+            (threads[i] = new clientThread(clientSocket, threads, i)).start();
             break;
           }
         }
@@ -83,12 +83,13 @@ class clientThread extends Thread {
   private Socket clientSocket = null;
   private final clientThread[] threads;
   private int maxClientsCount;
-  private Character character = new Character(1,1);
+  private Character character = null;
 
-  public clientThread(Socket clientSocket, clientThread[] threads) {
+  public clientThread(Socket clientSocket, clientThread[] threads, int playerID) {
     this.clientSocket = clientSocket;
     this.threads = threads;
     maxClientsCount = threads.length;
+    character = new Character(playerID, 1, playerID);
   }
 
   @SuppressWarnings("deprecation")

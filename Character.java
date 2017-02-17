@@ -5,12 +5,15 @@ public class Character {
 	// Character Y location
 	private int y = 0;
 	
+	// Stores which player this character is atteched to.
+	private int playerID;
+	
 	private Cell currentCell;
 
 	// Sets character x and y on initialisation
-	public Character(int initialX, int initialY) {
-		Thread Char = new Character; //contains the one instance of that person character
+	public Character(int initialX, int initialY, int playerID) {
 		setPosition(initialX, initialY);
+		this.playerID = playerID;
 	}
 
 	// Getters

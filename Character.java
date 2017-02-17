@@ -1,5 +1,3 @@
-import java.util.HashMap;
-
 public class Character {
 
 	// Character X location
@@ -8,22 +6,26 @@ public class Character {
 	private int y = 0;
 	
 	// Potential next X
-	private int nextX = 0;
+	public int nextX = 0;
 	//Potential next Y
 	private int nextY = 0;
 	
-	private Cell currentCell;
+	// Stores which player this character is attached to.
+	private int playerID;
 	
+	// Possible movement commands
 	private static String movementCommands[] = {
 	        "north", "south", "east", "west"
 	    };
 	
-
 	private Map map = Map.getInstance();
 
 	// Sets character x and y on initialisation
-	public Character(int initialX, int initialY) {
+	public Character(int initialX, int initialY, int playerID) {
 		setPosition(initialX, initialY);
+		this.playerID = playerID;
+		nextX = x;
+		nextY = y;
 	}
 
 	// Getters
@@ -35,15 +37,15 @@ public class Character {
 		return y;
 	}
 
-	// Setter
+	// Sets character position
 	public void setPosition(int newX, int newY) {
 		x = newX;
 		y = newY;
 	}
 
 	// Checks to see which cell on the map the character is currently on
-	public void getCurrentCell(){
-		currentCell = map.getCells()[x][y];
+	public Cell getCurrentCell(){
+		return map.getCells()[x][y];
 	}
 	
 	// Checks a cell in the map to see if it's free
@@ -55,31 +57,30 @@ public class Character {
 			return false;
 	}	
 	
-	
+	// Checks string is valid and updates character position
 	public synchronized void moveCharacter(String inputMovement){
 		if (inputMovement == movementCommands[0])
 		{
-			nextX += 1;
+			nextX++;
 		}
 		else if (inputMovement == movementCommands[1])
 		{
-			nextX -= 1;
+			nextX--;
+		}
+		else if (inputMovement == movementCommands[2])
+		{
+			nextY++;
 		}
 		else if (inputMovement == movementCommands[3])
 		{
-			nextY += 1;
+			nextY--;
 		}
-		else if (inputMovement == movementCommands[4])
-		{
-			nextY -= 1;
-		}
-		
+
 		if (checkForFreeCell())
 		{
+			getCurrentCell().cellTaken = false;
 			setPosition(nextX, nextY);
-			currentCell.cellTaken = false;
-			currentCell = map.getCells()[x][y];
-			currentCell.cellTaken = true;
+			getCurrentCell().cellTaken = true;
 		}
 	}
 	

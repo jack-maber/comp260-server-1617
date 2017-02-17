@@ -4,28 +4,35 @@ import java.sql.*;
 // http://www.sqlitetutorial.net/sqlite-java/
 
 public class Database {
-
 	static String url = "jdbc:sqlite:./db/" + "highscores.db";
+	static String problemSetsUrl = "jdbc:sqlite:./db/" + "problemSets.db";
 
 	// SQL statement that is to be executed
-	static String highscoresTable = "CREATE TABLE IF NOT EXISTS highscores (\n" + "	id integer PRIMARY KEY,\n"
-			+ "	name text NOT NULL,\n" + " score integer NOT NULL\n" + ");";
+	static String highscoresTable = "CREATE TABLE IF NOT EXISTS highscores (\n"
+			+ "	id integer PRIMARY KEY,\n"
+			+ "	name text NOT NULL,\n"
+			+ " score integer NOT NULL\n"
+			+ ");";
+	
+	// String to create problemQuestions Database
+	static String problemQuestions = "CREATE TABLE IF NOT EXISTS problemSets(\n"
+			+ "	id integer PRIMARY KEY,\n"
+			+ "	Questions text NOT NULL\n"
+			+ ");";
 
 	// Will try and access database, however if the filename does not exist, it
 	// will create the database.
-	public static synchronized void accessHighscoreDatabase() {
+	public static synchronized void accessDatabase(String url, String DatabaseName) {
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
-				DatabaseMetaData meta = conn.getMetaData();
-
 				// Execute SQL statement
 				try (Statement stmt = conn.createStatement()) {
-					stmt.execute(highscoresTable);
+					stmt.execute(DatabaseName);
 
 				} catch (SQLException e) {
 					System.out.println(e.getMessage());
 				}
-				System.out.println("A new database has been created.");
+				System.out.println(DatabaseName + "Database has been created.");
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -48,7 +55,7 @@ public class Database {
 		}
 	}
 
-	public static synchronized void insertHighscoreData(int ID, String name, int score) {
+	public static synchronized void insertIntoHighscoreDatabase(int ID, String name, int score) {
 		String sql = "INSERT INTO highscores(id,name,score) VALUES(?,?,?)";
 
 		try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -60,5 +67,46 @@ public class Database {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	// Insert problem sets into problemsetDatabase
+	public static synchronized void insertProblemSets()
+	{
+		// check to see if database exists
+		accessDatabase(problemSetsUrl, problemQuestions);
+		String problemSetQuery = "INSERT INTO problemSets(id, Questions) VALUES(?,?)";
+		String QuestionOne = "Question One";
+		int problemSetSize = 3;
+		
+		for(int i = 0; i < problemSetSize; i++)
+		{
+			try (Connection conn = DriverManager.getConnection(problemSetsUrl); PreparedStatement pstmt = conn.prepareStatement(problemSetQuery)) {
+				pstmt.setInt(1, i);
+				pstmt.setString(2, QuestionOne + i);
+				pstmt.executeUpdate();
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+	
+	public static synchronized void getProblemSet()
+	{
+		String problem = "SELECT id, Questions FROM problemSets";
+		
+		try (Connection conn = DriverManager.getConnection(problemQuestions);
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(problem)) {
+
+			// loop through the result set
+			while (rs.next()) {
+				System.out.println(rs.getInt("id") + "\t" + rs.getString("Questions"));
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+	}
+	
+	
 
 }

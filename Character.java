@@ -26,6 +26,8 @@ public class Character {
 	public Character(int initialX, int initialY, int playerID) {
 		setPosition(initialX, initialY);
 		this.playerID = playerID;
+		nextX = x;
+		nextY = y;
 	}
 
 	// Getters
@@ -59,21 +61,21 @@ public class Character {
 	
 	// Checks string is valid and updates character position
 	public synchronized void moveCharacter(String inputMovement){
-		if (inputMovement == "north")
+		if (inputMovement == movementCommands[0])
 		{
-			nextX += 1;
+			nextX++;
 		}
-		else if (inputMovement == "south")
+		else if (inputMovement == movementCommands[1])
 		{
-			nextX -= 1;
+			nextX--;
 		}
-		else if (inputMovement == "east")
+		else if (inputMovement == movementCommands[2])
 		{
-			nextY += 1;
+			nextY++;
 		}
-		else if (inputMovement == "west")
+		else if (inputMovement == movementCommands[3])
 		{
-			nextY -= 1;
+			nextY--;
 		}
 
 		if (checkForFreeCell())

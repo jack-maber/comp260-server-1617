@@ -10,9 +10,6 @@ public class Character {
 	//Potential next Y
 	private int nextY = 0;
 	
-	// Stores which player this character is attached to.
-	private int playerID;
-	
 	// Possible movement commands
 	private static String movementCommands[] = {
 	        "north", "south", "east", "west"
@@ -21,9 +18,8 @@ public class Character {
 	private Map map = Map.getInstance();
 
 	// Sets character x and y on initialisation
-	public Character(int initialX, int initialY, int playerID) {
+	public Character(int initialX, int initialY) {
 		setPosition(initialX, initialY);
-		this.playerID = playerID;
 		nextX = x;
 		nextY = y;
 	}

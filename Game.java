@@ -1,3 +1,5 @@
+import db.Tick;
+
 /**q
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -79,6 +81,7 @@ class Game
         // execute them until the game is over.
                 
         boolean finished = false;
+        Tick tick = Tick.getInstance();
         while (! finished) {
             Command command = parser.getCommand();
             finished = processCommand(command);

@@ -1,6 +1,4 @@
-import db.Tick;
-
-/**q
+/**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
  *  can walk around some scenery. That's all. It should really be extended 
@@ -21,6 +19,7 @@ class Game
 {
     private Parser parser;
     private Room currentRoom;
+    private ProcessCommand proCom = new ProcessCommand();
     
     /**
      * Main method to start the game.
@@ -84,7 +83,7 @@ class Game
         Timer timer = Timer.getInstance();
         while (! finished) {
             Command command = parser.getCommand();
-            finished = processCommand(command);
+            finished = proCom.processCommand(command);
         }
         timer.killTimer();
 System.out.println("Thank you for playing.  Good bye.");
@@ -108,7 +107,7 @@ System.out.println("Thank you for playing.  Good bye.");
      * If this command ends the game, true is returned, otherwise false is
      * returned.
      */
-    private boolean processCommand(Command command) 
+    /*private boolean processCommand(Command command) 
     {
         boolean wantToQuit = false;
 
@@ -126,7 +125,7 @@ System.out.println("Thank you for playing.  Good bye.");
             wantToQuit = quit(command);
         }
         return wantToQuit;
-    }
+    }*/
 
     // implementations of user commands:
 
@@ -135,20 +134,20 @@ System.out.println("Thank you for playing.  Good bye.");
      * Here we print some stupid, cryptic message and a list of the 
      * command words.
      */
-    private void printHelp() 
+    /*private void printHelp() 
     {
         System.out.println("You are lost. You are alone. You wander");
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
         parser.showCommands();
-    }
+    }*/
 
     /** 
      * Try to go to one direction. If there is an exit, enter the new
      * room, otherwise print an error message.
      */
-    private void goRoom(Command command) 
+    /*private void goRoom(Command command) 
     {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
@@ -174,7 +173,7 @@ System.out.println("Thank you for playing.  Good bye.");
      * whether we really quit the game. Return true, if this command
      * quits the game, false otherwise.
      */
-    private boolean quit(Command command) 
+    /*private boolean quit(Command command) 
     {
         if(command.hasSecondWord()) {
             System.out.println("Quit what?");
@@ -182,7 +181,7 @@ System.out.println("Thank you for playing.  Good bye.");
         }
         else
             return true;  // signal that we want to quit
-    }
+    }*/
 }
 
 

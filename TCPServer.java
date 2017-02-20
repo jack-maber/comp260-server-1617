@@ -25,6 +25,7 @@ public class TCPServer {
 	private static final int maxClientsCount = 40;
 	private static final clientThread[] threads = new clientThread[maxClientsCount];
 
+	//Our Code////////////////////////////////////////////////////////////
 	public clientThread[] GetThreads() {
 		return threads;
 	}
@@ -35,7 +36,7 @@ public class TCPServer {
 	
 	private TCPServer(){}
 	
-
+	//Our code ends////////////////////////////////////////////////////////
 	public static void main(String args[]) {
 
 		// The default port number.
@@ -102,6 +103,8 @@ class clientThread extends Thread {
 	private PrintStream outStream = null;
 	private Socket clientSocket = null;
 	private final clientThread[] threads;
+	//Our Code////////////////////////////////////////////////////////////
+
 	private int maxClientsCount;
 	private Character character = new Character(1, 1);
 	private final int ID;
@@ -118,7 +121,8 @@ class clientThread extends Thread {
 	public int getID(){
 		return ID;
 	}
-	
+	//Our Code End/////////////////////////////////////////////////////////
+
 	@SuppressWarnings("deprecation")
 	public void run() {
 		int maxClientsCount = this.maxClientsCount;
@@ -192,6 +196,8 @@ class clientThread extends Thread {
 					synchronized (this) {
 						for (int i = 0; i < maxClientsCount; i++) {
 							if (threads[i] != null && threads[i].clientName != null) {
+								//Our Code////////////////////////////////////////////////////////////
+
 								// Added line
 								threads[i].outStream.println("<" + name + "> " + line);
 								// This section accesses the parser and adds the
@@ -207,6 +213,8 @@ class clientThread extends Thread {
 								parser.addToCommands(commands + finalID);
 								threads[i].outStream.println();
 								// commands = null;
+								//Our Code Ends////////////////////////////////////////////////////////
+
 
 							}
 						}
@@ -244,6 +252,7 @@ class clientThread extends Thread {
 		}
 
 	}
+	//Our Code////////////////////////////////////////////////////////////
 
 	// Function for getting the client ID for each client thread
 	public long GetClientThread() {
@@ -254,4 +263,6 @@ class clientThread extends Thread {
 	public Character GetCharacter() {
 		return character;
 	}
+	//Our Code Ends////////////////////////////////////////////////////////
+
 }

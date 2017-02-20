@@ -72,8 +72,9 @@ class Parser
 	        else
 	            word3 = null;
 	        
-	        Thread[] threads = server.GetThreads();
-	        Thread thread = threads[finalClientID];
+	        clientThread[] threads = server.GetThreads();
+	        clientThread thread = threads[finalClientID];
+	        Character character = thread.GetCharacter();
 	        System.out.println(threads);
 
 	        // note: we just ignore the rest of the input line.
@@ -86,9 +87,13 @@ class Parser
 				finalCommand = new Command(word1, word2, word3);
 	        else
 	        	finalCommand = new Command(null, word2, word3);
-			//processCommand.processCommand(finalCommand, );
+			
+			//search for the right thread
+			processCommand.processCommand(finalCommand, character);
+			}
+			
 		}
-	}
+	
 	
 	protected synchronized void addToCommands(String command){
 		commandList.add(command);

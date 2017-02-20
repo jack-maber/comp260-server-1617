@@ -13,8 +13,7 @@ public class BreakWave {
 		while (!round)
 		{
 			System.out.println(timer.ticksPass);
-			
-			if (timer.getTicksPass() > 100)
+			if (timer.getTicksPass() > 10)
 			{
 				System.out.println("Break Over");
 				round = true;

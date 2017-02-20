@@ -11,6 +11,8 @@ import java.net.ServerSocket;
  * A chat server that delivers public and private messages.
  */
 public class TCPServer {
+	
+	private static TCPServer tCPServer = new TCPServer();
 
 	// The server socket.
 	private static ServerSocket serverSocket = null;
@@ -20,6 +22,17 @@ public class TCPServer {
 	// This chat server can accept up to maxClientsCount clients' connections.
 	private static final int maxClientsCount = 40;
 	private static final clientThread[] threads = new clientThread[maxClientsCount];
+
+	public clientThread[] GetThreads() {
+		return threads;
+	}
+	
+	public static TCPServer getInstance(){
+		return tCPServer;
+	}
+	
+	private TCPServer(){}
+	
 
 	public static void main(String args[]) {
 
@@ -126,7 +139,7 @@ class clientThread extends Thread {
 			}
 
 			/* Welcome the new the client. */
-			outStream.println("Welcome " + name + " Client ID: " + getID()
+			outStream.println("Welcome " + name + " Client ID: " + GetClientThread()
 					+ " to our chat room.\nTo leave enter /quit in a new line.");
 			synchronized (this) {
 				for (int i = 0; i < maxClientsCount; i++) {
@@ -177,12 +190,12 @@ class clientThread extends Thread {
 						for (int i = 0; i < maxClientsCount; i++) {
 							if (threads[i] != null && threads[i].clientName != null) {
 								// Added line
-								threads[i].outStream.println("<" + name + "> " + getID() + " " + line);
+								threads[i].outStream.println("<" + name + "> " + line);
 								// This section accesses the parser and adds the
 								// inputed line/word to the command list
 								String commands = line;
 								parser.addToCommands(commands);
-								threads[i].outStream.println(parser.getCommandList());
+								threads[i].outStream.println();
 								// commands = null;
 
 							}
@@ -221,6 +234,13 @@ class clientThread extends Thread {
 		}
 
 	}
+
+	// Function for getting the client ID for each client thread
+	public long GetClientThread() {
+
+		return Thread.currentThread().getId();
+	}
+
 	public Character GetCharacter() {
 		return character;
 	}

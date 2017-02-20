@@ -12,6 +12,8 @@ import java.net.ServerSocket;
  */
 public class TCPServer {
 	
+	private static Timer timer = Timer.getInstance();
+	
 	private static TCPServer tCPServer = new TCPServer();
 
 	// The server socket.
@@ -75,6 +77,7 @@ public class TCPServer {
 					os.println("Server too busy. Try later.");
 					os.close();
 					clientSocket.close();
+					timer.getTickThread().interrupt();
 				}
 			} catch (IOException e) {
 				System.out.println(e);

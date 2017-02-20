@@ -35,7 +35,10 @@ class Parser
 	ProcessCommand processCommand = new ProcessCommand();
 	protected synchronized List<String> getCommands(){
 		return commandList;
-		
+	}
+	
+	protected synchronized void emptyCommandList(){
+	commandList.clear();
 	}
 	
 	protected synchronized void executeCommands(){

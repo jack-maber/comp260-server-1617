@@ -34,6 +34,7 @@ public class Timer {
 class TickThread extends Thread {
 	// waits for a specified time and then will go through all the commands.
 	public void run() {
+
 		Timer timer = Timer.getInstance();
 		while (true) {
 			try {

@@ -3,7 +3,7 @@ public class ProcessCommand {
 
 	private Parser parser = Parser.getInstance();
 
-	public boolean processCommand(Command command) {
+	public boolean processCommand(Command command, Character character) {
 		boolean wantToQuit = false;
 
 		if (command.isUnknown()) {
@@ -18,6 +18,9 @@ public class ProcessCommand {
 			goRoom(command);
 		else if (commandWord.equals("quit")) {
 			wantToQuit = quit(command);
+		}
+		else if (commandWord.equals("move")) {
+			character.moveCharacter(command.getSecondWord());
 		}
 		return wantToQuit;
 	}

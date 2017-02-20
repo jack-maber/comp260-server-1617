@@ -33,6 +33,45 @@ class Parser
 		return commandList;
 	}
 	
+	protected synchronized void executeCommands(){
+		
+        String inputLine = "";   // will hold the full input line
+        String word1;
+        String word2;
+        String word3;
+        Command finalCommand;
+		
+		for (int i = 0; i < commandList.size(); i++){
+			String command = commandList.get(i);
+	        StringTokenizer tokenizer = new StringTokenizer(command);
+
+	        if(tokenizer.hasMoreTokens())
+	            word1 = tokenizer.nextToken();      // get first word
+	        else
+	            word1 = null;
+	        if(tokenizer.hasMoreTokens())
+	            word2 = tokenizer.nextToken();      // get second word
+	        else
+	            word2 = null;
+	        if(tokenizer.hasMoreTokens())
+	            word3 = tokenizer.nextToken();      // get second word
+	        else
+	            word3 = null;
+
+	        // note: we just ignore the rest of the input line.
+
+	        // Now check whether this word is known. If so, create a command
+	        // with it. If not, create a "null" command (for unknown command).
+
+	        
+			if(commands.isCommand(word1))
+				finalCommand = new Command(word1, word2, word3);
+	        else
+	        	finalCommand = new Command(null, word2, word3);
+			//Game.processCommand();
+		}
+	}
+	
 	protected synchronized void addToCommands(String command){
 		commandList.add(command);
 	}

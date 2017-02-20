@@ -27,8 +27,9 @@ public class Timer {
 class TickThread extends Thread {
 	// waits for a specified time and then will go through all the commands.
 	public void run() {
+		Parser parser = Parser.getInstance();
 		while (true) {
-			System.out.println("tick");
+			//parser.
 			try {
 				Thread.sleep(200);
 			}

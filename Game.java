@@ -78,7 +78,6 @@ class Game
       
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
-               WATCH BLADERUNNER
         boolean finished = false;
         Timer timer = Timer.getInstance();
         while (! finished) {

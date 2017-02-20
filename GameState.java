@@ -1,10 +1,12 @@
 
 public class GameState {
-
-	int Score = 0;
-	int Wave = 0;
-	boolean IsActive = false;
+	// Int for the players score
+	int score = 0;
+	// Int for the current wave number
+	int wave = 0;
+	// Bool for isActive
+	boolean isActive = false;
 	
 	// to be set to number of players joining
-	public Character[] Players = new Character[0];
+	public Character[] players = new Character[0];
 }

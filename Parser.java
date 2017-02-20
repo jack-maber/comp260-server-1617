@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /*
@@ -19,67 +21,112 @@ import java.util.StringTokenizer;
  * @version 1.0 (February 2002)
  */
 
+
+/* making a singleton class so commands can be stacked safely
+ * to be executed each tick
+*/
 class Parser 
 {
-	public Map map; // holds all the cells that the game is played on
-
-    private CommandWords commands;  // holds all valid command words
-
-    public Parser() 
-    {
-    	map = new Map();
-        commands = new CommandWords();
-    }
-
-    public Command getCommand() 
-    {
-        String inputLine = "";   // will hold the full input line
+	//stores the commands to be executed on tick
+	private List<String> commandList = new LinkedList<String>();
+	
+	TCPServer server = TCPServer.getInstance();
+	
+	ProcessCommand processCommand = new ProcessCommand();
+	protected synchronized List<String> getCommands(){
+		return commandList;
+	}
+	
+	protected synchronized void emptyCommandList(){
+	commandList.clear();
+	}
+	
+	protected synchronized void executeCommands(){
+		
         String word1;
         String word2;
         String word3;
+        Command finalCommand;
+		
+		for (int i = 0; i < commandList.size(); i++){
+			String startCommand = commandList.get(i);
+			//get the thread ID then remove it from the command
+			int commandLength = startCommand.length();
+			
+			//remove the client id from the command and store it
+			String clientID = startCommand.substring(commandLength - 2, commandLength);
+			System.out.println(clientID);
+			String command = startCommand.substring(0,commandLength -2);
+			System.out.println(command);
+			int finalClientID = Integer.parseInt(clientID);
+			
+	        StringTokenizer tokenizer = new StringTokenizer(command);
 
-        System.out.print("> ");     // print prompt
+	        if(tokenizer.hasMoreTokens())
+	            word1 = tokenizer.nextToken();      // get first word
+	        else
+	            word1 = null;
+	        if(tokenizer.hasMoreTokens())
+	            word2 = tokenizer.nextToken();      // get second word
+	        else
+	            word2 = null;
+	        if(tokenizer.hasMoreTokens())
+	            word3 = tokenizer.nextToken();      // get second word
+	        else
+	            word3 = null;
+	        
+	        clientThread[] threads = server.GetThreads();
+	        clientThread thread = threads[finalClientID];
+	        Character character = thread.GetCharacter();
+	        System.out.println(threads);
 
-        BufferedReader reader = 
-            new BufferedReader(new InputStreamReader(System.in));
-        try {
-            inputLine = reader.readLine();
-        }
-        catch(java.io.IOException exc) {
-            System.out.println ("There was an error during reading: "
-                                + exc.getMessage());
-        }
+	        // note: we just ignore the rest of the input line.
 
-        StringTokenizer tokenizer = new StringTokenizer(inputLine);
+	        // Now check whether this word is known. If so, create a command
+	        // with it. If not, create a "null" command (for unknown command).
 
-        if(tokenizer.hasMoreTokens())
-            word1 = tokenizer.nextToken();      // get first word
-        else
-            word1 = null;
-        if(tokenizer.hasMoreTokens())
-            word2 = tokenizer.nextToken();      // get second word
-        else
-            word2 = null;
-        if(tokenizer.hasMoreTokens())
-            word3 = tokenizer.nextToken();      // get second word
-        else
-            word3 = null;
+	        
+			if(commands.isCommand(word1))
+				finalCommand = new Command(word1, word2, word3);
+	        else
+	        	finalCommand = new Command(null, word2, word3);
+			
+			//search for the right thread
+			processCommand.processCommand(finalCommand, character);
+			}
+			
+		}
+	
+	
+	protected synchronized void addToCommands(String command){
+		commandList.add(command);
+	}
+	
+	private static Parser parser = new Parser();
 
-        // note: we just ignore the rest of the input line.
+    private CommandWords commands;  // holds all valid command words
 
-        // Now check whether this word is known. If so, create a command
-        // with it. If not, create a "null" command (for unknown command).
-
-        if(commands.isCommand(word1))
-            return new Command(word1, word2, word3);
-        else
-            return new Command(null, word2, word3);
+    private Parser() 
+    {
+        commands = new CommandWords();
     }
+    
+    public static Parser getInstance(){
+    	return parser;
+    }
+
+    public String getCommandList(){
+    	for(int i = 0; i < 10; i++){
+    		System.out.println(commandList);
+    	}
+		return null;
+    }
+    
 
     /**
      * Print out a list of valid command words.
      */
-    public void showCommands()
+    protected void showCommands()
     {
         commands.showAll();
     }

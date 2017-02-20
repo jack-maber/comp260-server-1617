@@ -2,6 +2,7 @@ import java.io.DataInputStream;
 import java.io.PrintStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.net.ServerSocket;
 
 //Sourced From http://makemobiapps.blogspot.co.uk/p/multiple-client-server-chat-programming.html
@@ -17,9 +18,13 @@ public class TCPServer {
 	private static Socket clientSocket = null;
 
 	// This chat server can accept up to maxClientsCount clients' connections.
-	private static final int maxClientsCount = 40;
+	private static final int maxClientsCount = 50;
 	private static final clientThread[] threads = new clientThread[maxClientsCount];
 
+	public clientThread[] GetThread() {
+		return threads;
+	}
+	
 	public static void main(String args[]) {
 
 		// The default port number.
@@ -49,8 +54,8 @@ public class TCPServer {
 		while (true) {
 			try {
 				clientSocket = serverSocket.accept();
-				int i = 0;
-				for (i = 0; i < maxClientsCount; i++) {
+				int i = 10;
+				for (i = 10; i < maxClientsCount; i++) {
 					if (threads[i] == null) {
 						(threads[i] = new clientThread(clientSocket, threads)).start();
 						break;
@@ -86,8 +91,10 @@ class clientThread extends Thread {
 	private Socket clientSocket = null;
 	private final clientThread[] threads;
 	private int maxClientsCount;
-	private Character character = new Character(1, 1);
+	private Character character = new Character(1,1);
 	private String commands = null;
+
+	private Parser parser = Parser.getInstance();
 
 	public clientThread(Socket clientSocket, clientThread[] threads) {
 		this.clientSocket = clientSocket;
@@ -118,7 +125,8 @@ class clientThread extends Thread {
 			}
 
 			/* Welcome the new the client. */
-			outStream.println("Welcome " + name + "Client ID:" + GetClientThread() + " to our chat room.\nTo leave enter /quit in a new line.");
+			outStream.println("Welcome " + name + "Client ID:" + GetClientThread()
+					+ " to our chat room.\nTo leave enter /quit in a new line.");
 			synchronized (this) {
 				for (int i = 0; i < maxClientsCount; i++) {
 					if (threads[i] != null && threads[i] == this) {
@@ -167,8 +175,23 @@ class clientThread extends Thread {
 					synchronized (this) {
 						for (int i = 0; i < maxClientsCount; i++) {
 							if (threads[i] != null && threads[i].clientName != null) {
+								// Added line
 								threads[i].outStream.println("<" + name + "> " + line + commands);
-								commands = line;
+								// This section accesses the parser and adds the
+								// inputed line/word to the command list
+								Long ClientID = GetClientThread();
+								Long.toString(ClientID);
+								String ClientIDCheck = null;
+
+								if (threads[i].GetClientThread() < 10) {
+									ClientIDCheck = "1" + ClientID;
+								}
+
+								commands = line + ClientIDCheck;
+								parser.addToCommands(commands);
+								threads[i].outStream.println(parser.getCommandList());
+								commands = null;
+
 							}
 						}
 					}
@@ -206,14 +229,12 @@ class clientThread extends Thread {
 
 	}
 
-	public String GetCommands() {
-		return commands;
-
-	}
-
+	// Function for getting the client ID for each client thread
 	public long GetClientThread() {
 
 		return Thread.currentThread().getId();
 	}
-
+	public Character GetCharacter() {
+		return character;
+	}
 }

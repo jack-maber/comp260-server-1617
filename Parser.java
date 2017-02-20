@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -27,10 +28,11 @@ import java.util.StringTokenizer;
 class Parser 
 {
 	//stores the commands to be executed on tick
-	private List<String> commandList;
+	private List<String> commandList = new LinkedList<String>();
 	
 	protected synchronized List<String> getCommands(){
 		return commandList;
+		
 	}
 	
 	protected synchronized void addToCommands(String command){
@@ -50,6 +52,13 @@ class Parser
     	return parser;
     }
 
+    public String getCommandList(){
+    	for(int i = 0; i < 10; i++){
+    		System.out.println(commandList);
+    	}
+		return null;
+    }
+    
     protected Command getCommand() 
     {
         String inputLine = "";   // will hold the full input line

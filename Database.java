@@ -3,24 +3,24 @@ import java.sql.*;
 /* sqlite-jdbc can be downloaded form here: https://bitbucket.org/xerial/sqlite-jdbc/downloads */
 // http://www.sqlitetutorial.net/sqlite-java/
 
-public class Database {
-	static String highscoreUrl = "jdbc:sqlite:./db/" + "highscores.db";
-	static String problemSetsUrl = "jdbc:sqlite:./db/" + "problemSets.db";
+public class Database extends Thread {
+	static final String highscoreUrl = "jdbc:sqlite:./db/" + "highscores.db";
+	static final String problemSetsUrl = "jdbc:sqlite:./db/" + "problemSets.db";
 
 	// SQL statement that is to be executed
-	static String highscoresTable = "CREATE TABLE IF NOT EXISTS highscores (\n"
+	static final String highscoresTable = "CREATE TABLE IF NOT EXISTS highscores (\n"
 			+ "	id integer PRIMARY KEY,\n"
 			+ "	name text NOT NULL,\n"
 			+ " score integer NOT NULL\n"
 			+ ");";
 	
 	// String to create problemQuestions Database
-	static String problemQuestions = "CREATE TABLE IF NOT EXISTS problemSets(\n"
+	static final String problemQuestions = "CREATE TABLE IF NOT EXISTS problemSets(\n"
 			+ "	id integer PRIMARY KEY,\n"
 			+ "	Questions text NOT NULL\n"
 			+ ");";
 	
-	static String[] questionList = {"Question 1", "Question 2", "Question 3"};
+	static final String[] questionList = {"Question 1", "Question 2", "Question 3"};
 
 	/* Will try and access database, however if the filename does not exist, it will create the database */
 	public static synchronized void accessDatabase(String url, String DatabaseName) {
@@ -42,7 +42,7 @@ public class Database {
 
 	/* Prints the highscore database */
 	public static synchronized void printHighscoreDatabase() {
-		String sql = "SELECT id, name, score FROM highscores";
+		final String sql = "SELECT id, name, score FROM highscores";
 
 		// Connect to the database and execute the sql string
 		try (Connection conn = DriverManager.getConnection(highscoreUrl);
@@ -60,7 +60,7 @@ public class Database {
 
 	/* Insert a new player into the highscore database */
 	public static synchronized void insertIntoHighscoreDatabase(int ID, String name, int score) {
-		String HighscoreSQLQuery = "INSERT INTO highscores(id,name,score) VALUES(?,?,?)";
+		final String HighscoreSQLQuery = "INSERT INTO highscores(id,name,score) VALUES(?,?,?)";
 
 		accessDatabase(highscoreUrl, highscoresTable);
 		try (Connection conn = DriverManager.getConnection(highscoreUrl); PreparedStatement pstmt = conn.prepareStatement(HighscoreSQLQuery)) {
@@ -80,7 +80,7 @@ public class Database {
 	{
 		// Check to see if database exists and if not create it
 		accessDatabase(problemSetsUrl, problemQuestions);
-		String problemSetQuery = "INSERT INTO problemSets(id, Questions) VALUES(?,?)";
+		final String problemSetQuery = "INSERT INTO problemSets(id, Questions) VALUES(?,?)";
 		
 		// Loop through the questions in the list and add them to the database
 		for(int i = 0; i < questionList.length; i++)
@@ -98,7 +98,7 @@ public class Database {
 	/* Will return a problem string from the list of problem questions  */
 	public static synchronized void printProblemSet()
 	{
-		String problem = "SELECT id, Questions FROM problemSets";
+		final String problem = "SELECT id, Questions FROM problemSets";
 		
 		try (Connection conn = DriverManager.getConnection(problemSetsUrl);
 				Statement stmt = conn.createStatement();

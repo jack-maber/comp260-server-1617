@@ -194,7 +194,14 @@ class clientThread extends Thread {
 								// This section accesses the parser and adds the
 								// inputed line/word to the command list
 								String commands = line;
-								parser.addToCommands(commands);
+								String finalID = Long.toString(getID());
+								if (getID() < 10){
+									long iD =getID();
+									Long.toString(iD);
+									finalID = ("0" + iD);
+									
+								}
+								parser.addToCommands(commands + finalID);
 								threads[i].outStream.println();
 								// commands = null;
 

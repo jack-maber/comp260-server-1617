@@ -1,7 +1,9 @@
 // singleton timer
 
 public class Timer {
-
+	
+	public int ticksPass;
+	
 	private static Timer timer = new Timer();
 
 	private Thread thread;
@@ -16,9 +18,14 @@ public class Timer {
 	}
 
 	protected Thread getTick() {
+		ticksPass++;
 		return thread;
 	}
 
+	public int getTicksPass(){
+		return ticksPass;
+	}
+	
 	protected void killTimer() {
 		thread.interrupt();
 	}
@@ -27,9 +34,11 @@ public class Timer {
 class TickThread extends Thread {
 	// waits for a specified time and then will go through all the commands.
 	public void run() {
+		Timer timer = Timer.getInstance();
 		while (true) {
-			System.out.println("tick");
 			try {
+				timer.ticksPass = timer.ticksPass + 1;//every 5th of a second adds 1 
+				//System.out.println(timer.ticksPass);
 				Thread.sleep(200);
 			}
 			catch (InterruptedException threadShutdown) {

@@ -11,6 +11,8 @@ import java.net.ServerSocket;
  * A chat server that delivers public and private messages.
  */
 public class TCPServer {
+	
+	private static TCPServer tCPServer = new TCPServer();
 
 	// The server socket.
 	private static ServerSocket serverSocket = null;
@@ -21,9 +23,15 @@ public class TCPServer {
 	private static final int maxClientsCount = 50;
 	private static final clientThread[] threads = new clientThread[maxClientsCount];
 
-	public clientThread[] GetThread() {
+	public clientThread[] GetThreads() {
 		return threads;
 	}
+	
+	public static TCPServer getInstance(){
+		return tCPServer;
+	}
+	
+	private TCPServer(){}
 	
 	public static void main(String args[]) {
 

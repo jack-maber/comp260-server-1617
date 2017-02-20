@@ -78,12 +78,12 @@ class Game
       
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
-               WATCH BLADERUNNER
         boolean finished = false;
         Timer timer = Timer.getInstance();
         while (! finished) {
-            Command command = parser.getCommand();
-            finished = proCom.processCommand(command);
+            //Command command = parser.getCommand();
+        	parser.addToCommands("quit11");
+            //finished = proCom.processCommand(command);
         }
         timer.killTimer();
 System.out.println("Thank you for playing.  Good bye.");

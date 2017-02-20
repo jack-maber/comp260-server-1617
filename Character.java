@@ -1,5 +1,9 @@
 public class Character {
-
+	
+	Character(){
+		
+	}
+	
 	// Character X location
 	private int x = 0;
 	// Character Y location

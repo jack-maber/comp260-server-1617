@@ -5,7 +5,6 @@ public class ProcessCommand {
 
 	public boolean processCommand(Command command, Character character) {
 		boolean wantToQuit = false;
-
 		if (command.isUnknown()) {
 			System.out.println("I don't know what you mean...");
 			return false;

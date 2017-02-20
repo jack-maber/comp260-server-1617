@@ -17,10 +17,6 @@ public class Timer {
 		return timer;
 	}
 
-	protected Thread getTick() {
-		ticksPass++;
-		return thread;
-	}
 
 	public int getTicksPass(){
 		return ticksPass;
@@ -34,11 +30,12 @@ public class Timer {
 class TickThread extends Thread {
 	// waits for a specified time and then will go through all the commands.
 	public void run() {
-
+		Parser parser = Parser.getInstance();
 		Timer timer = Timer.getInstance();
 		while (true) {
 			try {
-				timer.ticksPass = timer.ticksPass + 1;//every 5th of a second adds 1 
+				timer.ticksPass = timer.ticksPass + 1; //every 5th of a second adds 1
+				parser.executeCommands();
 				//System.out.println(timer.ticksPass);
 				Thread.sleep(200);
 			}

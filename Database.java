@@ -3,7 +3,7 @@ import java.sql.*;
 /* sqlite-jdbc can be downloaded form here: https://bitbucket.org/xerial/sqlite-jdbc/downloads */
 // http://www.sqlitetutorial.net/sqlite-java/
 
-public class Database extends Thread {
+public class Database {
 	static final String highscoreUrl = "jdbc:sqlite:./db/" + "highscores.db";
 	static final String problemSetsUrl = "jdbc:sqlite:./db/" + "problemSets.db";
 
@@ -17,13 +17,16 @@ public class Database extends Thread {
 	// String to create problemQuestions Database
 	static final String problemQuestions = "CREATE TABLE IF NOT EXISTS problemSets(\n"
 			+ "	id integer PRIMARY KEY,\n"
-			+ "	Questions text NOT NULL\n"
+			+ "	Questions text NOT NULL,\n"
+			+ " Answers text NOT NULL \n"
 			+ ");";
 	
+	// Keep the questions and answers in the same order
 	static final String[] questionList = {"Question 1", "Question 2", "Question 3"};
+	static final String[] answerList = {"Q1Answer", "Q2Answer", "Q3Answer"};
 
 	/* Will try and access database, however if the filename does not exist, it will create the database */
-	public static synchronized void accessDatabase(String url, String DatabaseName) {
+    static synchronized void accessDatabase(String url, String DatabaseName) {
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
 				// Execute SQL statement
@@ -72,7 +75,6 @@ public class Database extends Thread {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		
 	}
 	
 	/* Insert problem sets into problemsetDatabase */
@@ -80,7 +82,7 @@ public class Database extends Thread {
 	{
 		// Check to see if database exists and if not create it
 		accessDatabase(problemSetsUrl, problemQuestions);
-		final String problemSetQuery = "INSERT INTO problemSets(id, Questions) VALUES(?,?)";
+		final String problemSetQuery = "INSERT INTO problemSets(id, Questions, Answers) VALUES(?,?,?)";
 		
 		// Loop through the questions in the list and add them to the database
 		for(int i = 0; i < questionList.length; i++)
@@ -88,6 +90,7 @@ public class Database extends Thread {
 			try (Connection conn = DriverManager.getConnection(problemSetsUrl); PreparedStatement pstmt = conn.prepareStatement(problemSetQuery)) {
 				pstmt.setInt(1, i);
 				pstmt.setString(2, questionList[i]);
+				pstmt.setString(3, answerList[i]);
 				pstmt.executeUpdate();
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
@@ -98,7 +101,7 @@ public class Database extends Thread {
 	/* Will return a problem string from the list of problem questions  */
 	public static synchronized void printProblemSet()
 	{
-		final String problem = "SELECT id, Questions FROM problemSets";
+		final String problem = "SELECT id, Questions, Answers FROM problemSets";
 		
 		try (Connection conn = DriverManager.getConnection(problemSetsUrl);
 				Statement stmt = conn.createStatement();
@@ -106,7 +109,7 @@ public class Database extends Thread {
 
 			// loop through the result set and prints the Questions to the console
 			while (rs.next()) {
-				System.out.println(rs.getInt("id") + "\t" + rs.getString("Questions"));
+				System.out.println(rs.getInt("id") + "\t" + rs.getString("Questions")+ "\t" + rs.getString("Answers"));
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());

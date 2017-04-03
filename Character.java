@@ -16,7 +16,7 @@ public class Character {
 	
 	// Possible movement commands
 	private static String movementCommands[] = {
-	        "north", "south", "east", "west"
+	        "NORTH", "SOUTH", "EAST", "WEST"
 	    };
 	
 	private Map map = Map.getInstance();
@@ -67,21 +67,23 @@ public class Character {
 	
 	// Checks string is valid and updates character position
 	public synchronized void moveCharacter(String inputMovement){
-		if (inputMovement == movementCommands[0])
+		inputMovement = inputMovement.toUpperCase();
+		
+		if (inputMovement.equals("NORTH"))
 		{
-			nextX++;
+			nextX = nextX + 1;
 		}
-		else if (inputMovement == movementCommands[1])
+		else if (inputMovement.equals("SOUTH"))
 		{
-			nextX--;
+			nextX = nextX - 1;
 		}
-		else if (inputMovement == movementCommands[2])
+		else if (inputMovement == "EAST")
 		{
-			nextY++;
+			nextY = nextY + 1;
 		}
-		else if (inputMovement == movementCommands[3])
+		else if (inputMovement == "WEST")
 		{
-			nextY--;
+			nextY = nextY - 1;
 		}
 
 		if (checkForFreeCell())

@@ -41,7 +41,7 @@ class TickThread extends Thread {
 				timer.ticksPass = timer.ticksPass + 1; //every 5th of a second adds 1
 				parser.executeCommands();
 				parser.emptyCommandList();
-				System.out.println(parser.getCommands());
+				//System.out.println(parser.getCommands());
 				//System.out.println(timer.ticksPass);
 				Thread.sleep(200);
 			}

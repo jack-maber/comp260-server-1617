@@ -77,11 +77,11 @@ public class Character {
 		{
 			nextX = nextX - 1;
 		}
-		else if (inputMovement == "EAST")
+		else if (inputMovement.equals("EAST"))
 		{
 			nextY = nextY + 1;
 		}
-		else if (inputMovement == "WEST")
+		else if (inputMovement.equals("WEST"))
 		{
 			nextY = nextY - 1;
 		}

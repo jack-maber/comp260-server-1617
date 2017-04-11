@@ -1,6 +1,4 @@
-//Sourced From http://makemobiapps.blogspot.co.uk/p/multiple-client-server-chat-programming.html
-
-
+package TCPClientProject.TCPClient.src;
 
 import java.io.DataInputStream;
 import java.io.PrintStream;
@@ -9,6 +7,12 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+//Sourced From http://makemobiapps.blogspot.co.uk/p/multiple-client-server-chat-programming.html
+
+
+
+
 
 public class TCPClient implements Runnable {
 

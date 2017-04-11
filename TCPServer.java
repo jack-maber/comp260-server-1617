@@ -67,8 +67,11 @@ public class TCPServer {
 			try {
 				clientSocket = serverSocket.accept();
 				int i = 0;
-				for (i = 0; i < maxClientsCount; i++) {
-					if (threads[i] == null) {
+				for (i = 0; i < maxClientsCount; i++) 
+				{
+					if (threads[i] == null) 
+					{
+						// Create new client thread
 						(threads[i] = new clientThread(clientSocket, threads, i)).start();
 						break;
 					}
@@ -110,6 +113,7 @@ class clientThread extends Thread {
 	private final int ID;
 
 	private Parser parser = Parser.getInstance();
+	
 
 	public clientThread(Socket clientSocket, clientThread[] threads, int ID) {
 		this.clientSocket = clientSocket;
@@ -134,23 +138,19 @@ class clientThread extends Thread {
 			 */
 			inStream = new DataInputStream(clientSocket.getInputStream());
 			outStream = new PrintStream(clientSocket.getOutputStream());
-			String name;
-			while (true) {
-				outStream.println("Enter your name.");
-				name = inStream.readLine().trim();
-				if (name.indexOf('@') == -1) {
-					break;
-				} else {
-					outStream.println("The name should not contain '@' character.");
-				}
-			}
+			String name = inStream.readLine().trim();
+			
+			
 
 			/* Welcome the new the client. */
 			outStream.println("Welcome " + name + " Client ID: " + GetClientThread()
 					+ " to our chat room.\nTo leave enter /quit in a new line.");
-			synchronized (this) {
+			synchronized (this) 
+			{
 				for (int i = 0; i < maxClientsCount; i++) {
-					if (threads[i] != null && threads[i] == this) {
+					if (threads[i] != null && threads[i] == this) 
+					{
+						System.out.println("Player " + name + " Joined." );
 						clientName = "@" + name;
 						break;
 					}
@@ -162,37 +162,14 @@ class clientThread extends Thread {
 				}
 			}
 			/* Start the conversation. */
-			while (true) {
+			while (true) 
+			{
 				String line = inStream.readLine();
-				if (line.startsWith("/quit")) {
-					break;
+				if(line == "Move Down")
+				{
+					character.setPosition(character.getX(), character.getY() + 1);
 				}
-				/* If the message is private sent it to the given client. */
-				if (line.startsWith("@")) {
-					String[] words = line.split("\\s", 2);
-					if (words.length > 1 && words[1] != null) {
-						words[1] = words[1].trim();
-						if (!words[1].isEmpty()) {
-							synchronized (this) {
-								for (int i = 0; i < maxClientsCount; i++) {
-									if (threads[i] != null && threads[i] != this && threads[i].clientName != null
-											&& threads[i].clientName.equals(words[0])) {
-										threads[i].outStream.println("<" + name + "> " + words[1]);
-										/*
-										 * Echo this message to let the client
-										 * know the private message was sent.
-										 */
-										this.outStream.println(">" + name + "> " + words[1]);
-										break;
-									}
-								}
-							}
-						}
-					}
-				} else {
-					/*
-					 * The message is public, broadcast it to all other clients.
-					 */
+					 // The message is public, broadcast it to all other clients.
 					synchronized (this) {
 						for (int i = 0; i < maxClientsCount; i++) {
 							if (threads[i] != null && threads[i].clientName != null) {
@@ -219,8 +196,8 @@ class clientThread extends Thread {
 							}
 						}
 					}
-				}
-			}
+				
+			
 			synchronized (this) {
 				for (int i = 0; i < maxClientsCount; i++) {
 					if (threads[i] != null && threads[i] != this && threads[i].clientName != null) {
@@ -248,7 +225,8 @@ class clientThread extends Thread {
 			inStream.close();
 			outStream.close();
 			clientSocket.close();
-		} catch (IOException e) {
+			}
+			} catch (IOException e) {
 		}
 
 	}

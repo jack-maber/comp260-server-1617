@@ -138,8 +138,9 @@ class clientThread extends Thread {
 			 */
 			inStream = new DataInputStream(clientSocket.getInputStream());
 			outStream = new PrintStream(clientSocket.getOutputStream());
-			String name = inStream.readLine().trim();
+			String name = inStream.readLine();
 			
+			//TODO: send the client their id for communication
 			
 
 			/* Welcome the new the client. */
@@ -161,14 +162,25 @@ class clientThread extends Thread {
 					}
 				}
 			}
-			/* Start the conversation. */
+			/* Process their command */
 			while (true) 
 			{
 				String line = inStream.readLine();
-				if(line == "Move Down")
+				parser.addToCommands(line);
+				
+				if(line.startsWith("Move"))
 				{
-					character.setPosition(character.getX(), character.getY() + 1);
+					character.moveCharacter(line);;
 				}
+				
+				//TODO: add to list of commands to execute at the end of the tick
+				
+				
+				
+				//TODO: Then broadcast commands to players 
+				
+				
+				
 					 // The message is public, broadcast it to all other clients.
 					synchronized (this) {
 						for (int i = 0; i < maxClientsCount; i++) {

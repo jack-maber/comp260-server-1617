@@ -69,21 +69,21 @@ public class Character {
 	public synchronized void moveCharacter(String inputMovement){
 		inputMovement = inputMovement.toUpperCase();
 		
-		if (inputMovement.equals("NORTH"))
+		if (inputMovement.equals("MOVE_EAST"))
 		{
 			nextX = nextX + 1;
 		}
-		else if (inputMovement.equals("SOUTH"))
+		else if (inputMovement.equals("MOVE_WEST"))
 		{
 			nextX = nextX - 1;
 		}
-		else if (inputMovement.equals("EAST"))
-		{
-			nextY = nextY + 1;
-		}
-		else if (inputMovement.equals("WEST"))
+		else if (inputMovement.equals("MOVE_NORTH"))
 		{
 			nextY = nextY - 1;
+		}
+		else if (inputMovement.equals("MOVE_SOUTH"))
+		{
+			nextY = nextY + 1;
 		}
 
 		if (checkForFreeCell())

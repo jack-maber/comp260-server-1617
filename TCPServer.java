@@ -144,11 +144,13 @@ class clientThread extends Thread {
 			
 
 			/* Welcome the new the client. */
-			outStream.println("Welcome " + name + " Client ID: " + GetClientThread()
-					+ " to our chat room.\nTo leave enter /quit in a new line.");
+			outStream.println("Welcome " + name + " Client ID: " + GetClientThread());
+			
+			
 			synchronized (this) 
 			{
-				for (int i = 0; i < maxClientsCount; i++) {
+				for (int i = 0; i < maxClientsCount; i++) 
+				{
 					if (threads[i] != null && threads[i] == this) 
 					{
 						System.out.println("Player " + name + " Joined." );
@@ -156,23 +158,27 @@ class clientThread extends Thread {
 						break;
 					}
 				}
-				for (int i = 0; i < maxClientsCount; i++) {
-					if (threads[i] != null && threads[i] != this) {
+				for (int i = 0; i < maxClientsCount; i++) 
+				{
+					if (threads[i] != null && threads[i] != this) 
+					{
 						threads[i].outStream.println("*** A new user " + name + " entered the chat room !!! ***");
 					}
 				}
 			}
+			
+			
+			
 			/* Process their command */
 			while (true) 
 			{
-				String line = inStream.readLine();
+				String line = inStream.readLine().trim();
+				System.out.println(name +": " + line);
 				parser.addToCommands(line);
 				
-				if(line.startsWith("Move"))
-				{
-					character.moveCharacter(line);;
-				}
-				
+				character.moveCharacter(line);
+				System.out.println("CHARACTER POSITION: X = " + character.getX() + " Y = " + character.getY());
+				outStream.println("CHARACTER POSITION: X = " + character.getX() + " Y = " + character.getY());
 				//TODO: add to list of commands to execute at the end of the tick
 				
 				
@@ -182,63 +188,74 @@ class clientThread extends Thread {
 				
 				
 					 // The message is public, broadcast it to all other clients.
-					synchronized (this) {
-						for (int i = 0; i < maxClientsCount; i++) {
-							if (threads[i] != null && threads[i].clientName != null) {
-								//Our Code////////////////////////////////////////////////////////////
-
-								// Added line
-								threads[i].outStream.println("<" + name + "> " + line);
-								// This section accesses the parser and adds the
-								// inputed line/word to the command list
-								String commands = line;
-								String finalID = Long.toString(getID());
-								if (getID() < 10){
-									long iD =getID();
-									Long.toString(iD);
-									finalID = ("0" + iD);
-									
-								}
-								parser.addToCommands(commands + finalID);
-								threads[i].outStream.println();
-								// commands = null;
-								//Our Code Ends////////////////////////////////////////////////////////
-
-
+				synchronized (this) 
+				{
+					for (int i = 0; i < maxClientsCount; i++) 
+					{
+						if (threads[i] != null && threads[i].clientName != null) 
+						{
+							//Our Code////////////////////////////////////////////////////////////
+	
+							// Added line
+							threads[i].outStream.println("<" + name + "> " + line);
+							// This section accesses the parser and adds the
+							// inputed line/word to the command list
+							String commands = line;
+							String finalID = Long.toString(getID());
+							if (getID() < 10)
+							{
+								long iD =getID();
+								Long.toString(iD);
+								finalID = ("0" + iD);
+								
 							}
+							parser.addToCommands(commands + finalID);
+							threads[i].outStream.println("YOUR ID: " + finalID);
+							// commands = null;
+							//Our Code Ends////////////////////////////////////////////////////////
+	
+	
 						}
 					}
+				}
 				
-			
-			synchronized (this) {
-				for (int i = 0; i < maxClientsCount; i++) {
-					if (threads[i] != null && threads[i] != this && threads[i].clientName != null) {
-						threads[i].outStream.println("*** The user " + name + " is leaving the game !!! ***");
+			if(line == "QUIT")
+			{
+				synchronized (this) 
+				{
+					for (int i = 0; i < maxClientsCount; i++) 
+					{
+						if (threads[i] != null && threads[i] != this && threads[i].clientName != null) 
+						{
+							threads[i].outStream.println("*** The user " + name + " is leaving the game !!! ***");
+						}
 					}
 				}
-			}
-			outStream.println("*** Bye " + name + " ***");
-
-			/*
-			 * Clean up. Set the current thread variable to null so that a new
-			 * client could be accepted by the server.
-			 */
-			synchronized (this) {
-				for (int i = 0; i < maxClientsCount; i++) {
-					if (threads[i] == this) {
-						threads[i] = null;
+				outStream.println("*** Bye " + name + " ***");
+	
+				/*
+				 * Clean up. Set the current thread variable to null so that a new
+				 * client could be accepted by the server.
+				 */
+				synchronized (this) 
+				{
+					for (int i = 0; i < maxClientsCount; i++) {
+						if (threads[i] == this) {
+							threads[i] = null;
+						}
 					}
 				}
+				/*
+				 * Close the output stream, close the input stream, close the
+				 * socket.
+				 */
+				inStream.close();
+				outStream.close();
+				clientSocket.close();
+				}
 			}
-			/*
-			 * Close the output stream, close the input stream, close the
-			 * socket.
-			 */
-			inStream.close();
-			outStream.close();
-			clientSocket.close();
-			}
-			} catch (IOException e) {
+			} catch (IOException e) 
+		{
 		}
 
 	}

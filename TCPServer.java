@@ -175,15 +175,10 @@ class clientThread extends Thread {
 				String line = inStream.readLine().trim();
 				parser.addToCommands(line);
 				
-				character.moveCharacter(line);
-				System.out.println(name + " POSITION: X: " + character.getX() + " Y: " + character.getY());
-				//outStream.println("CHARACTER POSITION: X: " + character.getX() + " Y: " + character.getY());
-				
+				character.moveCharacter(line);		
 				
 				//TODO: add to list of commands to execute at the end of the tick
-			
-				
-				
+
 				//TODO: Then broadcast commands to players 
 				
 				
@@ -198,21 +193,8 @@ class clientThread extends Thread {
 
 
 							// Added line
-							threads[i].outStream.println("<" + name + "> " + line);
-							// This section accesses the parser and adds the
-							// inputed line/word to the command list
-							String commands = line;
-							String finalID = Long.toString(getID());
-							if (getID() < 10)
-							{
-								long iD =getID();
-								Long.toString(iD);
-								finalID = ("0" + iD);
-							}
-							//parser.addToCommands(commands + finalID);
+							//threads[i].outStream.println("<" + name + "> " + line);
 
-							// Send the positions of where every other player is
-							//if(line.equals("PLAYER_LOCATIONS_REQUEST"))
 							
 							threads[i].outStream.println("<" + name + "> X:" + character.getX() + 0  + " Y:" + character.getY() + 0);
 							

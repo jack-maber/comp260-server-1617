@@ -43,7 +43,7 @@ public class TCPServer {
 		int portNumber = 2222;
 		if (args.length < 1) {
 			System.out.println(
-					"Usage: java MultiThreadChatServerSync <portNumber>\n" + "Now using port number=" + portNumber);
+					"Server running on port number: " + portNumber);
 		} else {
 			portNumber = Integer.valueOf(args[0]).intValue();
 		}
@@ -173,29 +173,30 @@ class clientThread extends Thread {
 			while (true) 
 			{
 				String line = inStream.readLine().trim();
-				System.out.println(name +": " + line);
 				parser.addToCommands(line);
 				
 				character.moveCharacter(line);
-				System.out.println("CHARACTER POSITION: X = " + character.getX() + " Y = " + character.getY());
-				outStream.println("CHARACTER POSITION: X = " + character.getX() + " Y = " + character.getY());
-				//TODO: add to list of commands to execute at the end of the tick
+				System.out.println(name + " POSITION: X: " + character.getX() + " Y: " + character.getY());
+				//outStream.println("CHARACTER POSITION: X: " + character.getX() + " Y: " + character.getY());
 				
+				
+				//TODO: add to list of commands to execute at the end of the tick
+			
 				
 				
 				//TODO: Then broadcast commands to players 
 				
 				
 				
-					 // The message is public, broadcast it to all other clients.
+				// Send player positions to all the clients
 				synchronized (this) 
 				{
 					for (int i = 0; i < maxClientsCount; i++) 
 					{
 						if (threads[i] != null && threads[i].clientName != null) 
 						{
-							//Our Code////////////////////////////////////////////////////////////
-	
+
+
 							// Added line
 							threads[i].outStream.println("<" + name + "> " + line);
 							// This section accesses the parser and adds the
@@ -207,19 +208,21 @@ class clientThread extends Thread {
 								long iD =getID();
 								Long.toString(iD);
 								finalID = ("0" + iD);
-								
 							}
-							parser.addToCommands(commands + finalID);
-							threads[i].outStream.println("YOUR ID: " + finalID);
-							// commands = null;
-							//Our Code Ends////////////////////////////////////////////////////////
-	
-	
+							//parser.addToCommands(commands + finalID);
+
+							// Send the positions of where every other player is
+							//if(line.equals("PLAYER_LOCATIONS_REQUEST"))
+							
+							threads[i].outStream.println("<" + name + "> X:" + character.getX() + 0  + " Y:" + character.getY() + 0);
+							
+
 						}
 					}
 				}
 				
-			if(line == "QUIT")
+			// Disconnect the client if they send the quit message
+			if(line.equals("QUIT"))
 			{
 				synchronized (this) 
 				{
@@ -232,11 +235,9 @@ class clientThread extends Thread {
 					}
 				}
 				outStream.println("*** Bye " + name + " ***");
+				System.out.println("Player " + name + " Leaving");
 	
-				/*
-				 * Clean up. Set the current thread variable to null so that a new
-				 * client could be accepted by the server.
-				 */
+				
 				synchronized (this) 
 				{
 					for (int i = 0; i < maxClientsCount; i++) {

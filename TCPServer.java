@@ -109,7 +109,8 @@ class clientThread extends Thread {
 	//Our Code////////////////////////////////////////////////////////////
 
 	private int maxClientsCount;
-	private Character character = new Character(1, 1);
+	private Character character = new Character(3, 3);
+	private Map map = Map.getInstance();
 	private final int ID;
 
 	private Parser parser = Parser.getInstance();
@@ -173,9 +174,16 @@ class clientThread extends Thread {
 			while (true) 
 			{
 				String line = inStream.readLine().trim();
+				String Action = "NULL";
 				parser.addToCommands(line);
 				
-				character.moveCharacter(line);		
+				character.moveCharacter(line);
+				
+				if(line.equals("PLACE_BED") || line.equals("PLACE_BOX"))
+				{
+					Action = line;
+					map.setCell(character.getX(), character.getY(), line);
+				}
 				
 				//TODO: add to list of commands to execute at the end of the tick
 
@@ -184,8 +192,7 @@ class clientThread extends Thread {
 				
 				
 				// Send player positions to all the clients
-				synchronized (this) 
-				{
+				
 					for (int i = 0; i < maxClientsCount; i++) 
 					{
 						if (threads[i] != null && threads[i].clientName != null) 
@@ -194,14 +201,15 @@ class clientThread extends Thread {
 
 							// Added line
 							//threads[i].outStream.println("<" + name + "> " + line);
-
 							
-							threads[i].outStream.println("<" + name + "> X:" + character.getX() + 0  + " Y:" + character.getY() + 0);
+							// Character Locations
+							threads[i].outStream.println("<" + name + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + ".");
+							
 							
 
 						}
 					}
-				}
+				
 				
 			// Disconnect the client if they send the quit message
 			if(line.equals("QUIT"))

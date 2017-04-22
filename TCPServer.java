@@ -13,7 +13,7 @@ import java.net.ServerSocket;
 public class TCPServer {
 	
 	private static Timer timer = Timer.getInstance();
-
+	StringBuilder AllActions = new StringBuilder();
 	private static TCPServer tCPServer = new TCPServer();
 
 	// The server socket.
@@ -105,6 +105,7 @@ class clientThread extends Thread {
 	private DataInputStream inStream = null;
 	private PrintStream outStream = null;
 	private Socket clientSocket = null;
+	private String ClientAction = null;
 	private final clientThread[] threads;
 	//Our Code////////////////////////////////////////////////////////////
 
@@ -133,7 +134,10 @@ class clientThread extends Thread {
 		int maxClientsCount = this.maxClientsCount;
 		
 		clientThread[] threads = this.threads;
-
+		
+		
+		
+		
 		try {
 			/*
 			 * Create input and output streams for this client.
@@ -147,6 +151,7 @@ class clientThread extends Thread {
 
 			/* Welcome the new the client. */
 			outStream.println("Welcome " + name + " Client ID: " + GetClientThread());
+			
 			
 			
 			synchronized (this) 
@@ -175,46 +180,75 @@ class clientThread extends Thread {
 			while (true) 
 			{
 				String line = inStream.readLine().trim();
-				String Action = "      ";
-				//parser.addToCommands(line);
+				String Action = null;
+				boolean AlreadyInList = false;
 				
+				
+				// Move the character
 				character.moveCharacter(line);
+				
+				
+				
+				// Create a list of player names and locations
+				
+				// Check whether action has already been added
+				
+				
+					
+				//AllActions.append(ClientAction);
+				
+				// Sends number of players ins session
+				if(line.equals("NUMBER_OF_PLAYERS_REQUEST"))
+				{
+					int numberOfCurrentPlayers = 0;
+					for (int j = 0; j < maxClientsCount; j++) 
+					{
+						if (threads[j] != null && threads[j].clientName != null) 
+						{
+							numberOfCurrentPlayers++;
+						}
+					}
+					outStream.println("[#:" + 0 + numberOfCurrentPlayers +"].");
+					outStream.flush();
+				}
+				
+				
 				
 				if(line.equals("PLACE_BED") || line.equals("PLACE_BOX"))
 				{
 					Action = line;
 					map.setCell(character.getX(), character.getY(), line);
 				}
-				int numberOfCurrentPlayers = 0;
+				
 					
 					// Send player positions to all the clients
-					
-					for (int i = 0; i < maxClientsCount; i++) 
+				synchronized (this) 
+				{
+				for (int i = 0; i < maxClientsCount; i++) 
+				{
+					if (threads[i] != null && threads[i].clientName != null) 
 					{
-						if (threads[i] != null && threads[i].clientName != null) 
-						{
-							numberOfCurrentPlayers++;
-							if(Action != "      ")
-								System.out.println("Player: " + name + " Performed Action: " + Action);
 
-
-							// Added line
-							//threads[i].outStream.println("<" + name + "> " + line);
-
-							// Character Locations and actions
-							threads[i].outStream.println("<" + name + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + ".");
-
-
-
-
+						//parser.addToCommands("<" + name + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + ".|");
+						
+						ClientAction = ("{<" + threads[i].clientName + "> X:" +  threads[i].character.getX() + " Y:" +  threads[i].character.getY() + " ACT:" + Action + "." + "}");
+						TCPServer.getInstance().AllActions.append(ClientAction);
+						// Character Locations and actions
+					
+						
+						outStream.println(TCPServer.getInstance().AllActions.toString());
+						outStream.flush();
+						
+						//Clear All actions
+						
+						TCPServer.getInstance().AllActions.delete(0, TCPServer.getInstance().AllActions.length());
 						}
+
+
+					}
 					}
 				
 
-				if(line.equals("NUMBER_OF_PLAYERS_REQUEST"))
-				{
-					outStream.println("[GAMEINFO]" + "Player#:" + 0 + numberOfCurrentPlayers);
-				}
 				// Disconnect the client if they send the quit message
 				if(line.equals("QUIT"))
 				{
@@ -228,9 +262,8 @@ class clientThread extends Thread {
 							}
 						}
 					}
-				outStream.println("*** Bye " + name + " ***");
 				System.out.println("Player " + name + " Leaving");
-				numberOfCurrentPlayers--;
+				//numberOfCurrentPlayers--;
 	
 				
 				synchronized (this) 

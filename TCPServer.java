@@ -13,7 +13,7 @@ import java.net.ServerSocket;
 public class TCPServer {
 	
 	private static Timer timer = Timer.getInstance();
-	
+
 	private static TCPServer tCPServer = new TCPServer();
 
 	// The server socket.
@@ -126,11 +126,12 @@ class clientThread extends Thread {
 	public int getID(){
 		return ID;
 	}
-	//Our Code End/////////////////////////////////////////////////////////
-
+	
+	
 	@SuppressWarnings("deprecation")
 	public void run() {
 		int maxClientsCount = this.maxClientsCount;
+		
 		clientThread[] threads = this.threads;
 
 		try {
@@ -155,7 +156,7 @@ class clientThread extends Thread {
 					if (threads[i] != null && threads[i] == this) 
 					{
 						System.out.println("Player " + name + " Joined." );
-						clientName = "@" + name;
+						clientName = name;
 						break;
 					}
 				}
@@ -163,7 +164,7 @@ class clientThread extends Thread {
 				{
 					if (threads[i] != null && threads[i] != this) 
 					{
-						threads[i].outStream.println("*** A new user " + name + " entered the chat room !!! ***");
+						threads[i].outStream.println("<" + name + "> X:" +  character.getX() + " Y:" +  character.getY());
 					}
 				}
 			}
@@ -174,8 +175,8 @@ class clientThread extends Thread {
 			while (true) 
 			{
 				String line = inStream.readLine().trim();
-				String Action = "NULL";
-				parser.addToCommands(line);
+				String Action = "      ";
+				//parser.addToCommands(line);
 				
 				character.moveCharacter(line);
 				
@@ -184,48 +185,52 @@ class clientThread extends Thread {
 					Action = line;
 					map.setCell(character.getX(), character.getY(), line);
 				}
-				
-				//TODO: add to list of commands to execute at the end of the tick
-
-				//TODO: Then broadcast commands to players 
-				
-				
-				
-				// Send player positions to all the clients
-				
+				int numberOfCurrentPlayers = 0;
+					
+					// Send player positions to all the clients
+					
 					for (int i = 0; i < maxClientsCount; i++) 
 					{
 						if (threads[i] != null && threads[i].clientName != null) 
 						{
+							numberOfCurrentPlayers++;
+							if(Action != "      ")
+								System.out.println("Player: " + name + " Performed Action: " + Action);
 
 
 							// Added line
 							//threads[i].outStream.println("<" + name + "> " + line);
-							
-							// Character Locations
+
+							// Character Locations and actions
 							threads[i].outStream.println("<" + name + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + ".");
-							
-							
+
+
+
 
 						}
 					}
 				
-				
-			// Disconnect the client if they send the quit message
-			if(line.equals("QUIT"))
-			{
-				synchronized (this) 
+
+				if(line.equals("NUMBER_OF_PLAYERS_REQUEST"))
 				{
-					for (int i = 0; i < maxClientsCount; i++) 
+					outStream.println("[GAMEINFO]" + "Player#:" + 0 + numberOfCurrentPlayers);
+				}
+				// Disconnect the client if they send the quit message
+				if(line.equals("QUIT"))
+				{
+					synchronized (this) 
 					{
-						if (threads[i] != null && threads[i] != this && threads[i].clientName != null) 
+						for (int i = 0; i < maxClientsCount; i++) 
 						{
-							threads[i].outStream.println("*** The user " + name + " is leaving the game !!! ***");
+							if (threads[i] != null && threads[i] != this && threads[i].clientName != null) 
+							{
+								threads[i].outStream.println("*** The user " + name + " is leaving the game !!! ***");
+							}
 						}
 					}
-				}
 				outStream.println("*** Bye " + name + " ***");
 				System.out.println("Player " + name + " Leaving");
+				numberOfCurrentPlayers--;
 	
 				
 				synchronized (this) 
@@ -250,7 +255,6 @@ class clientThread extends Thread {
 		}
 
 	}
-	//Our Code////////////////////////////////////////////////////////////
 
 	// Function for getting the client ID for each client thread
 	public long GetClientThread() {

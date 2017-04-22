@@ -71,18 +71,22 @@ public class Character {
 		
 		if (inputMovement.equals("MOVE_EAST"))
 		{
-			nextX = nextX + 1;
+			if(nextX + 1 <= 100)
+				nextX = nextX + 1;
 		}
 		else if (inputMovement.equals("MOVE_WEST"))
 		{
-			nextX = nextX - 1;
+			if(nextX - 1 >= 0)
+				nextX = nextX - 1;
 		}
 		else if (inputMovement.equals("MOVE_NORTH"))
 		{
+			if(nextY - 1 >= 0)
 			nextY = nextY - 1;
 		}
 		else if (inputMovement.equals("MOVE_SOUTH"))
 		{
+			if(nextY + 1 <= 100)
 			nextY = nextY + 1;
 		}
 

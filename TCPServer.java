@@ -132,9 +132,9 @@ class clientThread extends Thread {
 	@SuppressWarnings("deprecation")
 	public void run() {
 		int maxClientsCount = this.maxClientsCount;
-		
+
 		clientThread[] threads = this.threads;
-		
+
 		try {
 			/*
 			 * Create input and output streams for this client.
@@ -142,9 +142,9 @@ class clientThread extends Thread {
 			inStream = new DataInputStream(clientSocket.getInputStream());
 			outStream = new PrintStream(clientSocket.getOutputStream());
 			String name = inStream.readLine();
-			
+
 			//TODO: send the client their id for communication
-			
+
 
 			/* Welcome the new the client. */
 			outStream.println("Welcome " + name + " Client ID: " + GetClientThread());
@@ -168,21 +168,21 @@ class clientThread extends Thread {
 					}
 				}
 			}
-			
-			
-			
+
+
+
 			/* Process their command */
 			while (true) 
 			{
 				String line = inStream.readLine().trim();
 				String Action = null;
 				boolean AlreadyInList = false;
-				
-				
+
+
 				// Move the character
 				character.moveCharacter(line);
 
-				
+
 				// Sends number of players ins session
 				if(line.equals("NUMBER_OF_PLAYERS_REQUEST"))
 				{
@@ -194,32 +194,34 @@ class clientThread extends Thread {
 							numberOfCurrentPlayers++;
 						}
 					}
+					//Print player number
 					outStream.println("[#:" + 0 + numberOfCurrentPlayers +"].");
 					outStream.flush();
 				}
-				
-				
+
+
 				//Process actions
 				if(line.equals("PLACE_BED") || line.equals("PLACE_BOX"))
 				{
 					Action = line;
 					map.setCell(character.getX(), character.getY(), line);
 				}
-				
 
-				// Send string of player positions to all the clients
+				//Send the player position for the current client thread first
+				outStream.println("{<" + clientName + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + "." + "}");
+
+				// concurrently send strings of player positions to all the clients
 				for (int i = 0; i < maxClientsCount; i++) 
 				{
 					if (threads[i] != null && threads[i].clientName != null) 
 					{
-						// Print the list of client actions and positions for each client
-					
+
 						//Send individual command aswell
 						threads[i].outStream.println("{<" + clientName + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + "." + "}");
 						threads[i].outStream.flush();
 					}
 				}
-				
+
 				// Disconnect the client if they send the quit message
 				if(line.equals("QUIT"))
 				{
@@ -229,35 +231,33 @@ class clientThread extends Thread {
 						{
 							if (threads[i] != null && threads[i] != this && threads[i].clientName != null) 
 							{
-								threads[i].outStream.println("*** The user " + name + " is leaving the game !!! ***");
+								threads[i].outStream.println("The player " + name + " is leaving");
 							}
 						}
 					}
-				System.out.println("Player " + name + " Leaving");
-				//numberOfCurrentPlayers--;
-	
-				
-				synchronized (this) 
-				{
-					for (int i = 0; i < maxClientsCount; i++) {
-						if (threads[i] == this) {
-							threads[i] = null;
+					System.out.println("Player " + name + " Leaving");
+
+
+					synchronized (this) 
+					{
+						for (int i = 0; i < maxClientsCount; i++) {
+							if (threads[i] == this) {
+								threads[i] = null;
+							}
 						}
 					}
-				}
-				/*
-				 * Close the output stream, close the input stream, close the
-				 * socket.
-				 */
-				inStream.close();
-				outStream.close();
-				clientSocket.close();
+					/*
+					 * Close the output stream, close the input stream, close the
+					 * socket.
+					 */
+					inStream.close();
+					outStream.close();
+					clientSocket.close();
 				}
 			}
-			} catch (IOException e) 
+		} catch (IOException e) 
 		{
 		}
-
 	}
 
 	// Function for getting the client ID for each client thread

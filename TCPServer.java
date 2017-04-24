@@ -164,7 +164,7 @@ class clientThread extends Thread {
 				{
 					if (threads[i] != null && threads[i] != this) 
 					{
-						threads[i].outStream.println("<" + name + "> X:" +  character.getX() + " Y:" +  character.getY());
+						threads[i].outStream.println("{<" + name + "> X:" +  character.getX() + " Y:" +  character.getY()+"}");
 					}
 				}
 			}
@@ -206,29 +206,20 @@ class clientThread extends Thread {
 					map.setCell(character.getX(), character.getY(), line);
 				}
 				
-				//Create a list of client actions
-				ClientAction = ("{<" + clientName + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + "." + "}");
-				synchronized (this) 
-				{
-				TCPServer.getInstance().AllActions.append(ClientAction);
-				}
+
 				// Send string of player positions to all the clients
 				for (int i = 0; i < maxClientsCount; i++) 
 				{
 					if (threads[i] != null && threads[i].clientName != null) 
 					{
-						// Print the list of client actions
-						outStream.println(TCPServer.getInstance().AllActions.toString());
-						outStream.flush();
-
+						// Print the list of client actions and positions for each client
+					
+						//Send individual command aswell
+						threads[i].outStream.println("{<" + clientName + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + "." + "}");
+						threads[i].outStream.flush();
 					}
 				}
 				
-				synchronized (this) 
-				{
-				//Clear All actions
-				TCPServer.getInstance().AllActions.delete(0, TCPServer.getInstance().AllActions.length());
-				}
 				// Disconnect the client if they send the quit message
 				if(line.equals("QUIT"))
 				{

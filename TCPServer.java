@@ -207,8 +207,6 @@ class clientThread extends Thread {
 					map.setCell(character.getX(), character.getY(), line);
 				}
 
-				//Send the player position for the current client thread first
-				outStream.println("{<" + clientName + "> X:" +  character.getX() + " Y:" +  character.getY() + " ACT:" + Action + "." + "}");
 
 				// concurrently send strings of player positions to all the clients
 				for (int i = 0; i < maxClientsCount; i++) 

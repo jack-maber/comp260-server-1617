@@ -1,0 +1,6 @@
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\SUD\bin\Debug\SUD.exe.config
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\SUD\bin\Debug\SUD.exe
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\SUD\bin\Debug\SUD.pdb
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\SUD\obj\Debug\SUD.csprojResolveAssemblyReference.cache
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\SUD\obj\Debug\SUD.exe
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\SUD\obj\Debug\SUD.pdb

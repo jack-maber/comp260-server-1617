@@ -32,17 +32,18 @@ namespace Client
 				}
 			}
 
-            int ID = 0;
+            
 
             while (true)
             {
-                String Msg = ID.ToString() + " testing, testing, 1,2,3";
-                ID++;
-                ASCIIEncoding encoder = new ASCIIEncoding();
-                byte[] buffer = encoder.GetBytes(Msg);
+
+                Console.Write("\n> ");
+                var Msg = Console.ReadLine();
 
                 try
                 {
+                    ASCIIEncoding encoder = new ASCIIEncoding();
+                    byte[] buffer = encoder.GetBytes(Msg);
                     Console.WriteLine("Writing to server: " + Msg);
                     int bytesSent = s.Send(buffer);
                 }

@@ -1,0 +1,5 @@
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Server\Server\bin\Debug\Server.exe
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Server\Server\bin\Debug\Server.pdb
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Server\Server\obj\x86\Debug\Server.csprojResolveAssemblyReference.cache
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Server\Server\obj\x86\Debug\Server.exe
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Server\Server\obj\x86\Debug\Server.pdb

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 using System.Net;
 using System.Net.Sockets;
@@ -38,7 +40,20 @@ namespace Server
                             String recdMsg = encoder.GetString(buffer, 0, result);
 
                             Console.WriteLine("Received: " + recdMsg);
+
+
+
+                            var Msg = ("Cheers for that bro");
+
+
+                            byte[] kickback = encoder.GetBytes(Msg);
+
+                            Console.WriteLine("Writing to server: " + Msg);
+                        
+                            int bytesSent = s.Send(buffer);
+
                         }
+                            
                     }
                     catch (System.Exception ex)
                     {

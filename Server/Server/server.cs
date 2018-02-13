@@ -43,18 +43,19 @@ namespace Server
 
 
 
-                            var Msg = ("Cheers for that bro");
+                            var Msg = ("Message Received");
 
 
                             byte[] kickback = encoder.GetBytes(Msg);
 
-                            Console.WriteLine("Writing to server: " + Msg);
+                            Console.WriteLine("Writing to Client: " + Msg);
                         
-                            int bytesSent = s.Send(buffer);
+                            int bytesSent = newConnection.Send(buffer);
 
                         }
                             
                     }
+
                     catch (System.Exception ex)
                     {
                         Console.WriteLine(ex);    	

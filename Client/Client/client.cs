@@ -36,7 +36,7 @@ namespace Client
 
             while (true)
             {
-
+                Console.WriteLine("Type Your Messsage");
                 Console.Write("\n> ");
                 var Msg = Console.ReadLine();
 
@@ -46,12 +46,34 @@ namespace Client
                     byte[] buffer = encoder.GetBytes(Msg);
                     Console.WriteLine("Writing to server: " + Msg);
                     int bytesSent = s.Send(buffer);
+
                 }
                 catch (System.Exception ex)
                 {
                     Console.WriteLine(ex);	
                 }
+
                 
+                try
+                {
+                    byte[] buffer = new byte[4096];
+
+                    int result = s.Receive(buffer);
+
+                    if (result > 0)
+                    {
+                        ASCIIEncoding encoder = new ASCIIEncoding();
+                        String recdMsg = encoder.GetString(buffer, 0, result);
+
+                        Console.WriteLine("Received: " + recdMsg);
+
+                        Thread.Sleep(5000);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
 
                 Thread.Sleep(1000);
             }

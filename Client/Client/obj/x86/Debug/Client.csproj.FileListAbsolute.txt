@@ -3,3 +3,9 @@ C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Client\Client\bin\Debug\Cli
 C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Client\Client\obj\x86\Debug\Client.exe
 C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Client\Client\obj\x86\Debug\Client.pdb
 C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Client\Client\obj\x86\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\jm192929\Downloads\comp260-server-1617\Client\Client\bin\Debug\Client.exe
+C:\Users\jm192929\Downloads\comp260-server-1617\Client\Client\bin\Debug\Client.pdb
+C:\Users\jm192929\Downloads\comp260-server-1617\Client\Client\obj\x86\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\jm192929\Downloads\comp260-server-1617\Client\Client\obj\x86\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\jm192929\Downloads\comp260-server-1617\Client\Client\obj\x86\Debug\Client.exe
+C:\Users\jm192929\Downloads\comp260-server-1617\Client\Client\obj\x86\Debug\Client.pdb

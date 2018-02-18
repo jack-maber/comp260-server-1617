@@ -80,7 +80,7 @@ namespace Winform_Client
                     {
                         MemoryStream stream = new MemoryStream(buffer);
                         BinaryReader read = new BinaryReader(stream);
-
+                        
                         Msg m = Msg.DecodeStream(read);
 
                         if (m != null)
@@ -236,6 +236,11 @@ namespace Winform_Client
             {
                 myThread.Abort();
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

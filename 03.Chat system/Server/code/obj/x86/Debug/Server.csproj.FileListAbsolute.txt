@@ -1,0 +1,7 @@
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\03.Chat system\Server\code\bin\Debug\Server.exe
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\03.Chat system\Server\code\bin\Debug\Server.pdb
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\03.Chat system\Server\code\bin\Debug\MessageTypes.dll
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\03.Chat system\Server\code\bin\Debug\MessageTypes.pdb
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\03.Chat system\Server\code\obj\x86\Debug\Server.exe
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\03.Chat system\Server\code\obj\x86\Debug\Server.pdb
+C:\Users\Jack\Documents\2nd Year\comp260-server-1617\03.Chat system\Server\code\obj\x86\Debug\Server.csprojResolveAssemblyReference.cache

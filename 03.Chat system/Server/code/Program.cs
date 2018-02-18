@@ -6,6 +6,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using System.IO;
 
 using MessageTypes;
@@ -15,7 +16,57 @@ namespace Server
 {
     class Program
     {
-        static Dictionary<String,Socket> clientDictionary = new Dictionary<String,Socket>();
+        Dictionary<String, Room> roomMap;
+
+        Room currentRoom;
+
+        public void Init()
+        {
+            roomMap = new Dictionary<string, Room>();
+            {
+                var room = new Room("Room 0", "You are standing in the entrance hall\nAll adventures start here");
+                room.north = "Room 1";
+                roomMap.Add(room.name, room);
+            }
+
+            {
+                var room = new Room("Room 1", "You are in room 1");
+                room.south = "Room 0";
+                room.west = "Room 3";
+                room.east = "Room 2";
+                roomMap.Add(room.name, room);
+            }
+
+            {
+                var room = new Room("Room 2", "You are in room 2");
+                room.north = "Room 4";
+                roomMap.Add(room.name, room);
+            }
+
+            {
+                var room = new Room("Room 3", "You are in room 3");
+                room.east = "Room 1";
+                roomMap.Add(room.name, room);
+            }
+
+            {
+                var room = new Room("Room 4", "You are in room 4");
+                room.south = "Room 2";
+                room.west = "Room 5";
+                roomMap.Add(room.name, room);
+            }
+
+            {
+                var room = new Room("Room 5", "You are in room 5");
+                room.south = "Room 1";
+                room.east = "Room 4";
+                roomMap.Add(room.name, room);
+            }
+
+            currentRoom = roomMap["Room 0"];
+        }
+
+        static Dictionary<String, Socket> clientDictionary = new Dictionary<String, Socket>();
         static int clientID = 1;
 
         static void SendClientName(Socket s, String clientName)
@@ -25,7 +76,7 @@ namespace Server
 
             MemoryStream outStream = nameMsg.WriteData();
 
-            s.Send(outStream.GetBuffer() );
+            s.Send(outStream.GetBuffer());
         }
 
         static void SendClientList()
@@ -57,8 +108,8 @@ namespace Server
             MemoryStream outStream = chatMsg.WriteData();
 
             lock (clientDictionary)
-            {            
-                foreach (KeyValuePair<String,Socket> s in clientDictionary)
+            {
+                foreach (KeyValuePair<String, Socket> s in clientDictionary)
                 {
                     try
                     {
@@ -66,8 +117,8 @@ namespace Server
                     }
                     catch (System.Exception)
                     {
-                    	
-                    }                    
+
+                    }
                 }
             }
         }
@@ -126,6 +177,7 @@ namespace Server
             }
         }
 
+    
 
         static void receiveClientProcess(Object o)
         {
@@ -136,6 +188,8 @@ namespace Server
             Console.WriteLine("client receive thread for " + GetNameFromSocket(chatClient));
 
             SendClientList();
+
+            
 
             while (bQuit == false)
             {

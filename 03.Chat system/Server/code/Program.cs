@@ -68,7 +68,7 @@ namespace Server
 
         static Dictionary<String, Socket> clientDictionary = new Dictionary<String, Socket>();
         static int clientID = 1;
-
+        
         static void SendClientName(Socket s, String clientName)
         {
             ClientNameMsg nameMsg = new ClientNameMsg();
@@ -262,6 +262,7 @@ namespace Server
 
         static void Main(string[] args)
         {
+            
             Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             serverSocket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8500));
@@ -270,6 +271,7 @@ namespace Server
             bool bQuit = false;
 
             Console.WriteLine("Server");
+            
 
             while (!bQuit)
             {
@@ -277,7 +279,7 @@ namespace Server
 
                 Thread myThread = new Thread(receiveClientProcess);
                 myThread.Start(serverClient);
-
+                
                 lock (clientDictionary)
                 {
                     String clientName = "client" + clientID;

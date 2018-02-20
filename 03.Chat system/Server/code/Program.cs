@@ -16,56 +16,7 @@ namespace Server
 {
     class Program
     {
-        Dictionary<String, Room> roomMap;
-
-        Room currentRoom;
-
-        public void Init()
-        {
-            roomMap = new Dictionary<string, Room>();
-            {
-                var room = new Room("Room 0", "You are standing in the entrance hall\nAll adventures start here");
-                room.north = "Room 1";
-                roomMap.Add(room.name, room);
-            }
-
-            {
-                var room = new Room("Room 1", "You are in room 1");
-                room.south = "Room 0";
-                room.west = "Room 3";
-                room.east = "Room 2";
-                roomMap.Add(room.name, room);
-            }
-
-            {
-                var room = new Room("Room 2", "You are in room 2");
-                room.north = "Room 4";
-                roomMap.Add(room.name, room);
-            }
-
-            {
-                var room = new Room("Room 3", "You are in room 3");
-                room.east = "Room 1";
-                roomMap.Add(room.name, room);
-            }
-
-            {
-                var room = new Room("Room 4", "You are in room 4");
-                room.south = "Room 2";
-                room.west = "Room 5";
-                roomMap.Add(room.name, room);
-            }
-
-            {
-                var room = new Room("Room 5", "You are in room 5");
-                room.south = "Room 1";
-                room.east = "Room 4";
-                roomMap.Add(room.name, room);
-            }
-
-            currentRoom = roomMap["Room 0"];
-        }
-
+       
         static Dictionary<String, Socket> clientDictionary = new Dictionary<String, Socket>();
         static int clientID = 1;
         
@@ -206,6 +157,8 @@ namespace Server
                         BinaryReader read = new BinaryReader(stream);
 
                         Msg m = Msg.DecodeStream(read);
+
+                       
 
                         if (m != null)
                         {

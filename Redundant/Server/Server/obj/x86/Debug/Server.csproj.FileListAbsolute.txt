@@ -9,3 +9,9 @@ C:\Users\jm192929\Downloads\comp260-server-1617\Server\Server\obj\x86\Debug\Serv
 C:\Users\jm192929\Downloads\comp260-server-1617\Server\Server\obj\x86\Debug\Server.csproj.CoreCompileInputs.cache
 C:\Users\jm192929\Downloads\comp260-server-1617\Server\Server\obj\x86\Debug\Server.exe
 C:\Users\jm192929\Downloads\comp260-server-1617\Server\Server\obj\x86\Debug\Server.pdb
+C:\Users\jm192929\Downloads\comp260-server-1617\Redundant\Server\Server\obj\x86\Debug\Server.csprojResolveAssemblyReference.cache
+C:\Users\jm192929\Downloads\comp260-server-1617\Redundant\Server\Server\obj\x86\Debug\Server.csproj.CoreCompileInputs.cache
+C:\Users\jm192929\Downloads\comp260-server-1617\Redundant\Server\Server\obj\x86\Debug\Server.exe
+C:\Users\jm192929\Downloads\comp260-server-1617\Redundant\Server\Server\obj\x86\Debug\Server.pdb
+C:\Users\jm192929\Downloads\comp260-server-1617\Redundant\Server\Server\bin\Debug\Server.exe
+C:\Users\jm192929\Downloads\comp260-server-1617\Redundant\Server\Server\bin\Debug\Server.pdb

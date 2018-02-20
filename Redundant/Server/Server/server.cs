@@ -14,6 +14,10 @@ namespace Server
     {
         static void Main(string[] args)
         {
+            Dungeon dungeon = new Dungeon();
+
+            dungeon.Init();
+            
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             IPEndPoint ipLocal = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8221);
@@ -25,7 +29,9 @@ namespace Server
             
             Socket newConnection = s.Accept();
             if (newConnection != null)
-            {            
+            {
+                ASCIIEncoding encoder = new ASCIIEncoding();
+
                 while (true)
                 {
                     byte[] buffer = new byte[4096];
@@ -36,24 +42,13 @@ namespace Server
 
                         if (result > 0)
                         {
-                            ASCIIEncoding encoder = new ASCIIEncoding();
-                            String recdMsg = encoder.GetString(buffer, 0, result);
+                            String userCmd = encoder.GetString(buffer, 0, result);
 
-                            Console.WriteLine("Received: " + recdMsg);
+                            var dungeonResult = dungeon.Process(userCmd);
 
-
-
-                            var Msg = ("Message Received");
-
-
-                            byte[] kickback = encoder.GetBytes(Msg);
-
-                            Console.WriteLine("Writing to Client: " + Msg);
-                        
-                            int bytesSent = newConnection.Send(buffer);
-
-                        }
-                            
+                            byte[] sendBuffer = encoder.GetBytes(dungeonResult);
+                            int bytesSent = newConnection.Send(sendBuffer);
+                        }                            
                     }
 
                     catch (System.Exception ex)

@@ -38,13 +38,13 @@ namespace Client
             {
                 Console.WriteLine("Type Your Messsage");
                 Console.Write("\n> ");
+
                 var Msg = Console.ReadLine();
 
                 try
                 {
                     ASCIIEncoding encoder = new ASCIIEncoding();
-                    byte[] buffer = encoder.GetBytes(Msg);
-                    Console.WriteLine("Writing to server: " + Msg);
+                    byte[] buffer = encoder.GetBytes(Msg);                
                     int bytesSent = s.Send(buffer);
 
                 }
@@ -65,9 +65,7 @@ namespace Client
                         ASCIIEncoding encoder = new ASCIIEncoding();
                         String recdMsg = encoder.GetString(buffer, 0, result);
 
-                        Console.WriteLine("Received: " + recdMsg);
-
-                        Thread.Sleep(5000);
+                        Console.WriteLine(recdMsg);
                     }
                 }
                 catch (System.Exception ex)

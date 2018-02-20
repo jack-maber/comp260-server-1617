@@ -66,6 +66,8 @@ namespace Client
                         String recdMsg = encoder.GetString(buffer, 0, result);
 
                         Console.WriteLine(recdMsg);
+
+                        Thread.Sleep(5000);
                     }
                 }
                 catch (System.Exception ex)

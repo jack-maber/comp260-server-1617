@@ -31,7 +31,7 @@ namespace Server
             if (newConnection != null)
             {
                 ASCIIEncoding encoder = new ASCIIEncoding();
-
+                Console.WriteLine("Connected");
                 while (true)
                 {
                     byte[] buffer = new byte[4096];
@@ -39,7 +39,7 @@ namespace Server
                     try
                     {
                         int result = newConnection.Receive(buffer);
-
+                        Console.WriteLine("Sending");
                         if (result > 0)
                         {
                             String userCmd = encoder.GetString(buffer, 0, result);

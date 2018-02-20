@@ -60,23 +60,22 @@ namespace Server
 
         public String Process(String key)
         {
-#if false
-            Console.Clear();
+            //Console.Clear();
 
-            Console.WriteLine(currentRoom.desc);
-            Console.WriteLine("Exits");
-            for (var i = 0; i < currentRoom.exits.Length; i++)
-            {
-                if (currentRoom.exits[i] != null)
-                {
-                    Console.Write(Room.exitNames[i] + " ");
-                }
-            }
+            //Console.WriteLine(currentRoom.desc);
+            //Console.WriteLine("Exits");
+            //for (var i = 0; i < currentRoom.exits.Length; i++)
+            //{
+            //    if (currentRoom.exits[i] != null)
+            //    {
+            //        Console.Write(Room.exitNames[i] + " ");
+            //    }
+            //}
 
-            Console.Write("\n> ");
+            //Console.Write("\n> ");
 
-            var key = Console.ReadLine();
-#endif
+            //var key = Console.ReadLine();
+
 
             String returnString = "";
 
@@ -157,6 +156,6 @@ namespace Server
 
 
             return returnString;
-        }
+        }   
     }
 }

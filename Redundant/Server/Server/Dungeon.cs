@@ -7,7 +7,7 @@ using System.Threading;
 namespace Server
 {
     public class Dungeon
-    {        
+    {
         Dictionary<String, Room> roomMap;
 
         Room currentRoom;
@@ -58,55 +58,56 @@ namespace Server
             currentRoom = roomMap["Room 0"];
         }
 
-        public String Process(String key)
+        public String RoomInfo()
         {
-            //Console.Clear();
+            String info = "";
+            info += currentRoom.desc;
+            info += "\nExits\n";
+            for (var i = 0; i < currentRoom.exits.Length; i++)
+            {
+                if (currentRoom.exits[i] != null)
+                {
+                    info += (Room.exitNames[i] + " ");
+                }
+            }
+            return info;
 
-            //Console.WriteLine(currentRoom.desc);
-            //Console.WriteLine("Exits");
-            //for (var i = 0; i < currentRoom.exits.Length; i++)
-            //{
-            //    if (currentRoom.exits[i] != null)
-            //    {
-            //        Console.Write(Room.exitNames[i] + " ");
-            //    }
-            //}
-
-            //Console.Write("\n> ");
-
-            //var key = Console.ReadLine();
-
-
-            String returnString = "";
-
-            var input = key.Split(' ');
+        }
+        public String Process(string Key)
+        {
+            
+            String returnString = (""); RoomInfo();
+            var input = Key.Split(' ');
 
             switch (input[0].ToLower())
             {
                 case "help":
-                    returnString += "\nCommands are ....\n" ;
+                    returnString += RoomInfo();
+
+                    returnString += "\nCommands are ....\n";
                     returnString += "help - for this screen\n";
                     returnString += "look - to look around\n";
                     returnString += "go [north | south | east | west]  - to travel between locations\n";
                     returnString += "\nPress any key to continue\n";
-                    break;
+
+                    return returnString;
 
                 case "look":
                     //loop straight back
                     Console.Clear();
                     Thread.Sleep(1000);
-                    break;
+                    returnString += RoomInfo();
+                    return returnString;
 
                 case "say":
-                    Console.Write("You say ");
+                    returnString += RoomInfo();
+                    returnString += ("\nYou say ");
                     for (var i = 1; i < input.Length; i++)
                     {
-                        Console.Write(input[i] + " ");
+                        returnString += (input[i] + " ");
                     }
 
-                    Thread.Sleep(1000);
-                    Console.Clear();
-                    break;
+                    return returnString;
 
                 case "go":
                     // is arg[1] sensible?
@@ -135,27 +136,25 @@ namespace Server
                                 else
                                 {
                                     //handle error
-                                    Console.WriteLine("\nERROR");
-                                    Console.WriteLine("\nCan not go "+ input[1]+ " from here");
-                                    Console.WriteLine("\nPress any key to continue");
-                                    Console.ReadKey(true);
+                                    returnString += RoomInfo();
+                                    returnString += "\nERROR";
+                                    returnString += "\nCan not go " + input[1] + " from here";
                                 }
                             }
                         }
                     }
-                    break;
 
+                    returnString += RoomInfo();
+                    return returnString;
+                    
                 default:
                     //handle error
-                    Console.WriteLine("\nERROR");
-                    Console.WriteLine("\nCan not " + key);
-                    Console.WriteLine("\nPress any key to continue");
-                    Console.ReadKey(true);
-                    break;
+                    returnString += RoomInfo();
+                    returnString += "\nERROR";
+                    returnString += "\nCan not " + Key;
+                    return returnString;
             }
 
-
-            return returnString;
-        }   
+        }
     }
 }

@@ -6,13 +6,27 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
 
 namespace Server
 {
     class server
     {
         static bool quit = false;
+
         static LinkedList<String> incommingMessages = new LinkedList<string>();
+
+        static LinkedList<String> outgoingMessages = new LinkedList<string>();
+
+        static Dictionary<String, Socket> clientDictionary = new Dictionary<String, Socket>();
+
+        static List<Player> PlayerList = new List<Player>();
+
+
+
+        static Dungeon dungeon = new Dungeon();
+
+        
 
         class ReceiveThreadLaunchInfo
         {
@@ -35,13 +49,65 @@ namespace Server
             while (quit == false)
             {
                 var newClientSocket = s.Accept();
-
                 var myThread = new Thread(clientReceiveThread);
+
                 myThread.Start(new ReceiveThreadLaunchInfo(ID, newClientSocket));
 
-                ID++;
+                lock (clientDictionary)
+                {
+                    String playerID = "client" + ID;
+                    clientDictionary.Add(playerID, newClientSocket);
+                    var player = new Player
+                    {
+                        dungeonRef = dungeon
+                    };
+
+                    player.Init();
+                    PlayerList.Add(player);
+                    ID++; //Iterates on ID as to not leave players with the same ID
+
+                    var dungeonResult = dungeon.RoomInfo(player);
+
+                    lock (outgoingMessages)
+                    {
+                        outgoingMessages.AddLast(playerID + ":" + dungeonResult);
+                    }
+                    
+
+
+                }
+
+            }
+
+        }
+
+
+        static Socket GetSocketFromName(String name)
+        {
+            lock (clientDictionary)
+            {
+                return clientDictionary[name];
             }
         }
+
+
+
+        static String GetNameFromSocket(Socket s)
+        {
+            lock (clientDictionary)
+            {
+                foreach (KeyValuePair<String, Socket> o in clientDictionary)
+                {
+                    if (o.Value == s)
+                    {
+                        return o.Key;
+                    }
+                }
+            }
+
+            return null;
+        }
+
 
         static void clientReceiveThread(Object obj)
         {
@@ -73,13 +139,13 @@ namespace Server
             }
         }
 
-        
+       
 
         static void Main(string[] args)
         {
             ASCIIEncoding encoder = new ASCIIEncoding();
 
-            var dungeon = new Dungeon(); 
+         
 
             dungeon.Init();
 
@@ -91,45 +157,75 @@ namespace Server
             s.Listen(4);
 
             Console.WriteLine("Waiting for client ...");
+           
 
-            Socket newConnection = s.Accept();
-            var dungeonResult = (dungeon.RoomInfo());
-
-            byte[] sendBuffer = encoder.GetBytes(dungeonResult); 
-            int bytesSent = newConnection.Send(sendBuffer); //Sending Back Info
+            var myThread = new Thread(acceptClientThread);
+            myThread.Start(s);
 
 
-            if (newConnection != null)
+            byte[] buffer = new byte[4096];
+
+
+            while (true)
             {
-                while (true)
+                String labelToPrint = "";
+                lock (incommingMessages)
                 {
-                    byte[] buffer = new byte[4096];
-
-                    try
+                    if (incommingMessages.First != null)
                     {
-                        int result = newConnection.Receive(buffer);
+                        labelToPrint = incommingMessages.First.Value;
 
-                        if (result > 0)
-                        {
-                            String recdMsg = encoder.GetString(buffer, 0, result);
-                            Console.WriteLine("Received: " + recdMsg);
+                        incommingMessages.RemoveFirst();
 
-                            dungeonResult = dungeon.Process(recdMsg);
-
-
-                            sendBuffer = encoder.GetBytes(dungeonResult); // this is sending back to client
-
-                            bytesSent = newConnection.Send(sendBuffer);
-
-                        }
                     }
-                    catch (System.Exception ex)
+                }
+                String messageToSend = "";
+                lock (outgoingMessages)
+                {
+                    if (outgoingMessages.First != null)
                     {
-                        Console.WriteLine(ex);
+                        messageToSend = outgoingMessages.First.Value;
+
+                        outgoingMessages.RemoveFirst();
+
                     }
+                }
+
+                if (messageToSend != "")
+                {
+                    Console.WriteLine("sending message");
+                    String[] substrings = messageToSend.Split(':');
+                    string theClient = substrings[0];
+                    string dungeonResult = substrings[1];
+
+                    byte[] sendBuffer = encoder.GetBytes(dungeonResult); // this is sending back to client
+                    int bytesSent = GetSocketFromName(theClient).Send(sendBuffer);
+                    bytesSent = GetSocketFromName(theClient).Send(sendBuffer);
 
                 }
+
+                if (labelToPrint != "")
+                {
+                    Console.WriteLine(labelToPrint);
+
+
+                    String[] substrings = labelToPrint.Split(':');
+
+                    int PlayerID = Int32.Parse(substrings[0]);
+                    Console.WriteLine(substrings[0]);
+                    var dungeonResult = dungeon.Process(substrings[1], PlayerList[PlayerID]);
+
+                    String theClient = "client" + substrings[0];
+                    Console.WriteLine(dungeonResult);
+
+                    lock (outgoingMessages)
+                    {
+                        outgoingMessages.AddLast(theClient + ":" + dungeonResult);
+                    }
+                }
+
             }
+            
         }
     }
 }

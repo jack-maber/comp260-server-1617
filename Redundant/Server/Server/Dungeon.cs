@@ -8,7 +8,7 @@ namespace Server
 {
     public class Dungeon
     {
-        Dictionary<String, Room> roomMap;
+        public Dictionary<String, Room> roomMap;
 
         Room currentRoom;
 
@@ -58,7 +58,7 @@ namespace Server
             currentRoom = roomMap["Room 0"];
         }
 
-        public String RoomInfo()
+        public String RoomInfo(Player player)
         {
             String info = "";
             info += currentRoom.desc;
@@ -73,16 +73,16 @@ namespace Server
             return info;
 
         }
-        public String Process(string Key)
+        public String Process(string Key, Player player)
         {
             
-            String returnString = (""); RoomInfo();
+            String returnString = (""); RoomInfo(player);
             var input = Key.Split(' ');
 
             switch (input[0].ToLower())
             {
                 case "help":
-                    returnString += RoomInfo();
+                    returnString += RoomInfo(player);
 
                     returnString += "\nCommands are ....\n";
                     returnString += "help - for this screen\n";
@@ -96,11 +96,11 @@ namespace Server
                     //loop straight back
                     Console.Clear();
                     Thread.Sleep(1000);
-                    returnString += RoomInfo();
+                    returnString += RoomInfo(player);
                     return returnString;
 
                 case "say":
-                    returnString += RoomInfo();
+                    returnString += RoomInfo(player);
                     returnString += ("\nYou say ");
                     for (var i = 1; i < input.Length; i++)
                     {
@@ -136,7 +136,7 @@ namespace Server
                                 else
                                 {
                                     //handle error
-                                    returnString += RoomInfo();
+                                    returnString += RoomInfo(player);
                                     returnString += "\nERROR";
                                     returnString += "\nCan not go " + input[1] + " from here";
                                 }
@@ -144,12 +144,12 @@ namespace Server
                         }
                     }
 
-                    returnString += RoomInfo();
+                    returnString += RoomInfo(player);
                     return returnString;
                     
                 default:
                     //handle error
-                    returnString += RoomInfo();
+                    returnString += RoomInfo(player);
                     returnString += "\nERROR";
                     returnString += "\nCan not " + Key;
                     return returnString;

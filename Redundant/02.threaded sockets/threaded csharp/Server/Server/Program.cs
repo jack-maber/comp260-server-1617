@@ -9,7 +9,8 @@ using System.Threading;
 
 namespace Server
 {
-    class server
+
+    class Program
     {
         static bool quit = false;
         static LinkedList<String> incommingMessages = new LinkedList<string>();
@@ -62,7 +63,7 @@ namespace Server
 
                         lock (incommingMessages)
                         {
-                            incommingMessages.AddLast(receiveInfo.ID + ":" + encoder.GetString(buffer, 0, result));
+                            incommingMessages.AddLast(receiveInfo.ID +":" + encoder.GetString(buffer, 0, result));
                         }
                     }
                 }
@@ -73,16 +74,9 @@ namespace Server
             }
         }
 
-        
 
         static void Main(string[] args)
         {
-            ASCIIEncoding encoder = new ASCIIEncoding();
-
-            var dungeon = new Dungeon(); 
-
-            dungeon.Init();
-
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             IPEndPoint ipLocal = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8221);
@@ -92,43 +86,35 @@ namespace Server
 
             Console.WriteLine("Waiting for client ...");
 
-            Socket newConnection = s.Accept();
-            var dungeonResult = (dungeon.RoomInfo());
-
-            byte[] sendBuffer = encoder.GetBytes(dungeonResult); 
-            int bytesSent = newConnection.Send(sendBuffer); //Sending Back Info
+            var myThread = new Thread(acceptClientThread);
+            myThread.Start(s);
 
 
-            if (newConnection != null)
+            int tick = 0;
+            int itemsProcessed = 0;
+            while (true)
             {
-                while (true)
+                String labelToPrint = "";
+                lock (incommingMessages)
                 {
-                    byte[] buffer = new byte[4096];
-
-                    try
+                    if (incommingMessages.First != null)
                     {
-                        int result = newConnection.Receive(buffer);
+                        labelToPrint = incommingMessages.First.Value;
 
-                        if (result > 0)
-                        {
-                            String recdMsg = encoder.GetString(buffer, 0, result);
-                            Console.WriteLine("Received: " + recdMsg);
+                        incommingMessages.RemoveFirst();
 
-                            dungeonResult = dungeon.Process(recdMsg);
-
-
-                            sendBuffer = encoder.GetBytes(dungeonResult); // this is sending back to client
-
-                            bytesSent = newConnection.Send(sendBuffer);
-
-                        }
+                        itemsProcessed++;
                     }
-                    catch (System.Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                    }
-
                 }
+
+                if (labelToPrint != "")
+                {
+                    Console.WriteLine(tick + ":" + itemsProcessed + " " + labelToPrint);
+                }
+
+                tick++;
+
+                Thread.Sleep(1);
             }
         }
     }

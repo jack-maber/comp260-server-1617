@@ -28,53 +28,30 @@ namespace Client
                 }
                 catch (Exception)
                 {
+                    Console.WriteLine("No server active");
                     Thread.Sleep(1000);
                 }
             }
 
             int ID = 0;
 
-            ASCIIEncoding encoder = new ASCIIEncoding();
-            byte[] buffer = new byte[4096];
-
-            int reciever = s.Receive(buffer);
-            //s.Receive(buffer);
-            if (reciever > 0)
-            {
-                String userCmd = encoder.GetString(buffer, 0, reciever);
-                Console.WriteLine(userCmd);
-            }
-
             while (true)
             {
-                //Console.Clear();
-                String Msg = Console.ReadLine();
-                Console.Clear();
+                String Msg = ID.ToString() + " testing, testing, 1,2,3";
                 ID++;
-
-                buffer = encoder.GetBytes(Msg);
+                ASCIIEncoding encoder = new ASCIIEncoding();
+                byte[] buffer = encoder.GetBytes(Msg);
 
                 try
                 {
-                    //Console.WriteLine("Writing to server: " + Msg);
+                    Console.WriteLine("Writing to server: " + Msg);
                     int bytesSent = s.Send(buffer);
-
-
-                    buffer = new byte[4096];
-                    reciever = s.Receive(buffer);
-                    //s.Receive(buffer);
-                    if (reciever > 0)
-                    {
-                        String userCmd = encoder.GetString(buffer, 0, reciever);
-                        Console.WriteLine(userCmd);
-                    }
-
-
                 }
                 catch (System.Exception ex)
                 {
                     Console.WriteLine(ex);
                 }
+
 
                 Thread.Sleep(1000);
             }

@@ -14,7 +14,7 @@ namespace Server
     {
         static bool quit = false;
 
-        static LinkedList<String> incommingMessages = new LinkedList<string>();
+        static LinkedList<String> incomingMessages = new LinkedList<string>();
 
         static LinkedList<String> outgoingMessages = new LinkedList<string>();
 
@@ -22,22 +22,21 @@ namespace Server
 
         static List<Player> PlayerList = new List<Player>();
 
-
-
         static Dungeon dungeon = new Dungeon();
 
         
 
         class ReceiveThreadLaunchInfo
         {
+            public int ID;
+            public Socket socket;
+
             public ReceiveThreadLaunchInfo(int ID, Socket socket)
             {
                 this.ID = ID;
                 this.socket = socket;
             }
 
-            public int ID;
-            public Socket socket;
         }
 
         static void acceptClientThread(Object obj)
@@ -126,9 +125,9 @@ namespace Server
                     {
                         ASCIIEncoding encoder = new ASCIIEncoding();
 
-                        lock (incommingMessages)
+                        lock (incomingMessages)
                         {
-                            incommingMessages.AddLast(receiveInfo.ID + ":" + encoder.GetString(buffer, 0, result));
+                            incomingMessages.AddLast(receiveInfo.ID + ":" + encoder.GetString(buffer, 0, result));
                         }
                     }
                 }
@@ -144,9 +143,6 @@ namespace Server
         static void Main(string[] args)
         {
             ASCIIEncoding encoder = new ASCIIEncoding();
-
-         
-
             dungeon.Init();
 
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -169,13 +165,13 @@ namespace Server
             while (true)
             {
                 String labelToPrint = "";
-                lock (incommingMessages)
+                lock (incomingMessages)
                 {
-                    if (incommingMessages.First != null)
+                    if (incomingMessages.First != null)
                     {
-                        labelToPrint = incommingMessages.First.Value;
+                        labelToPrint = incomingMessages.First.Value;
 
-                        incommingMessages.RemoveFirst();
+                        incomingMessages.RemoveFirst();
 
                     }
                 }

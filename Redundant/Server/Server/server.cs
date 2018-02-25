@@ -63,7 +63,7 @@ namespace Server
 
                     player.Init();
                     PlayerList.Add(player);
-                    ID++; //Iterates on ID as to not leave players with the same ID
+                     
 
                     var dungeonResult = dungeon.RoomInfo(player);
 
@@ -71,7 +71,8 @@ namespace Server
                     {
                         outgoingMessages.AddLast(playerID + ":" + dungeonResult);
                     }
-                    
+
+                    ID++;//Iterates on ID as to not leave players with the same ID
 
 
                 }
@@ -207,7 +208,7 @@ namespace Server
 
                     String[] substrings = labelToPrint.Split(':');
 
-                    int PlayerID = Int32.Parse(substrings[0]);
+                    int PlayerID = Int32.Parse(substrings[0]); //-1; add maybe
                     Console.WriteLine(substrings[0]);
                     var dungeonResult = dungeon.Process(substrings[1], PlayerList[PlayerID]);
 

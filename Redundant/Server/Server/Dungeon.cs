@@ -60,6 +60,7 @@ namespace Server
 
         public String RoomInfo(Player player)
         {
+            
             String info = "";
             info += currentRoom.desc;
             info += "\nExits\n";

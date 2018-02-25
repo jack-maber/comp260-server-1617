@@ -90,7 +90,7 @@ namespace Client
                     Console.WriteLine(ex);
                 }
 
-                //Thread.Sleep(1000);
+                Thread.Sleep(1000);
             }
         }
     }

@@ -178,37 +178,37 @@ namespace Server
                     }
                 }
 
-                if (messageToSend != "")
+                if (messageToSend != "") // This is the kickback to the Client
                 {
                     Console.WriteLine("sending message");
                     String[] substrings = messageToSend.Split(':');
                     string theClient = substrings[0];
                     string dungeonResult = substrings[1];
 
-                    byte[] sendBuffer = encoder.GetBytes(dungeonResult); // this is sending back to client
+                    byte[] sendBuffer = encoder.GetBytes(dungeonResult);
                     int bytesSent = GetSocketFromName(theClient).Send(sendBuffer);
                     bytesSent = GetSocketFromName(theClient).Send(sendBuffer);
 
                 }
 
-                String labelToPrint = "";
+                String ServerPrint = "";
                 lock (incomingMessages)
                 {
                     if (incomingMessages.First != null)
                     {
-                        labelToPrint = incomingMessages.First.Value;
+                        ServerPrint = incomingMessages.First.Value;
 
                         incomingMessages.RemoveFirst();
 
                     }
                 }
 
-                if (labelToPrint != "")
+                if (ServerPrint != "")
                 {
-                    Console.WriteLine(labelToPrint);
+                    Console.WriteLine(ServerPrint);
 
 
-                    String[] substrings = labelToPrint.Split(':');
+                    String[] substrings = ServerPrint.Split(':');
 
                     int PlayerID = Int32.Parse(substrings[0]); 
                     Console.WriteLine(substrings[0]);

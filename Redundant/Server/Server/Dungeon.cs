@@ -154,7 +154,7 @@ namespace Server
                     
                 default:
                     //handle error
-                    //returnString += RoomInfo(player);
+                    returnString += RoomInfo(player);
                     returnString += "\nERROR";
                     returnString += "\nCan not " + Key;
                     return returnString;

@@ -165,17 +165,7 @@ namespace Server
 
             while (true)
             {
-                String labelToPrint = "";
-                lock (incomingMessages)
-                {
-                    if (incomingMessages.First != null)
-                    {
-                        labelToPrint = incomingMessages.First.Value;
-
-                        incomingMessages.RemoveFirst();
-
-                    }
-                }
+                
                 String messageToSend = "";
                 lock (outgoingMessages)
                 {
@@ -201,6 +191,18 @@ namespace Server
 
                 }
 
+                String labelToPrint = "";
+                lock (incomingMessages)
+                {
+                    if (incomingMessages.First != null)
+                    {
+                        labelToPrint = incomingMessages.First.Value;
+
+                        incomingMessages.RemoveFirst();
+
+                    }
+                }
+
                 if (labelToPrint != "")
                 {
                     Console.WriteLine(labelToPrint);
@@ -208,7 +210,7 @@ namespace Server
 
                     String[] substrings = labelToPrint.Split(':');
 
-                    int PlayerID = Int32.Parse(substrings[0]); //-1; add maybe
+                    int PlayerID = Int32.Parse(substrings[0]); 
                     Console.WriteLine(substrings[0]);
                     var dungeonResult = dungeon.Process(substrings[1], PlayerList[PlayerID]);
 

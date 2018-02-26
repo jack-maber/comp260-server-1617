@@ -60,7 +60,7 @@ namespace Server
 
         public String RoomInfo(Player player)
         {
-            
+            currentRoom = player.currentRoom;
             String info = "";
             info += currentRoom.desc;
             info += "\nExits\n";
@@ -114,25 +114,29 @@ namespace Server
                     // is arg[1] sensible?
                     if ((input[1].ToLower() == "north") && (currentRoom.north != null))
                     {
-                        currentRoom = roomMap[currentRoom.north];
+                        player.currentRoom = roomMap[currentRoom.north];
+                        
                     }
                     else
                     {
                         if ((input[1].ToLower() == "south") && (currentRoom.south != null))
                         {
-                            currentRoom = roomMap[currentRoom.south];
+                            player.currentRoom = roomMap[currentRoom.south];
+                            
                         }
                         else
                         {
                             if ((input[1].ToLower() == "east") && (currentRoom.east != null))
                             {
-                                currentRoom = roomMap[currentRoom.east];
+                                player.currentRoom = roomMap[currentRoom.east];
+                                
                             }
                             else
                             {
                                 if ((input[1].ToLower() == "west") && (currentRoom.west != null))
                                 {
-                                    currentRoom = roomMap[currentRoom.west];
+                                    player.currentRoom = roomMap[currentRoom.west];
+                                    
                                 }
                                 else
                                 {
@@ -150,7 +154,7 @@ namespace Server
                     
                 default:
                     //handle error
-                    returnString += RoomInfo(player);
+                    //returnString += RoomInfo(player);
                     returnString += "\nERROR";
                     returnString += "\nCan not " + Key;
                     return returnString;

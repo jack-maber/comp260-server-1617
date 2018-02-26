@@ -62,11 +62,12 @@ namespace Client
                 }
             }
 
-            
+
+            int ID = 0;
 
             var myThread = new Thread(ReceiveMessages);
             myThread.Start(s);
-            int ID = 0;
+            
 
             ASCIIEncoding encoder = new ASCIIEncoding();
             byte[] buffer = new byte[4096];
@@ -90,7 +91,7 @@ namespace Client
                     Console.WriteLine(ex);
                 }
 
-                Thread.Sleep(1000);
+                
             }
         }
     }

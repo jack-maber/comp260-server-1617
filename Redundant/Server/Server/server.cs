@@ -191,7 +191,7 @@ namespace Server
 
                 }
 
-                String ServerPrint = "";
+                String ServerPrint = ""; //Prints to Server so debugging can happen 
                 lock (incomingMessages)
                 {
                     if (incomingMessages.First != null)

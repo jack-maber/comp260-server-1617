@@ -20,3 +20,9 @@ C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Redundant\Client\Client\bin
 C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Redundant\Client\Client\obj\x86\Debug\Client.csprojResolveAssemblyReference.cache
 C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Redundant\Client\Client\obj\x86\Debug\Client.exe
 C:\Users\Jack\Documents\2nd Year\comp260-server-1617\Redundant\Client\Client\obj\x86\Debug\Client.pdb
+C:\Users\Asus\Documents\Uni Work\2nd Year\260\comp260-server-1617\Redundant\Client\Client\bin\Debug\Client.exe
+C:\Users\Asus\Documents\Uni Work\2nd Year\260\comp260-server-1617\Redundant\Client\Client\bin\Debug\Client.pdb
+C:\Users\Asus\Documents\Uni Work\2nd Year\260\comp260-server-1617\Redundant\Client\Client\obj\x86\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\Asus\Documents\Uni Work\2nd Year\260\comp260-server-1617\Redundant\Client\Client\obj\x86\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\Asus\Documents\Uni Work\2nd Year\260\comp260-server-1617\Redundant\Client\Client\obj\x86\Debug\Client.exe
+C:\Users\Asus\Documents\Uni Work\2nd Year\260\comp260-server-1617\Redundant\Client\Client\obj\x86\Debug\Client.pdb

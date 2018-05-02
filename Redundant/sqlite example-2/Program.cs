@@ -8,6 +8,20 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Collections.Concurrent;
 
+#if TARGET_LINUX
+using Mono.Data.Sqlite;
+using sqliteConnection = Mono.Data.Sqlite.SqliteConnection;
+using sqliteCommand = Mono.Data.Sqlite.SqliteCommand;
+using sqliteDataReader = Mono.Data.Sqlite.SqliteDataReader;
+#endif
+
+#if TARGET_WINDOWS
+using System.Data.SQLite;
+using sqliteConnection = System.Data.SQLite.SQLiteConnection;
+using sqliteCommand = System.Data.SQLite.SQLiteCommand;
+using sqliteDataReader = System.Data.SQLite.SQLiteDataReader;
+#endif
+
 namespace MUDServer
 {
     class Program
@@ -15,6 +29,9 @@ namespace MUDServer
         static bool quit = false;
         
         static ConcurrentQueue<ClientMessageBase> clientCommand = new ConcurrentQueue<ClientMessageBase>();
+
+        static bool DatabaseReal = false;
+       
 
         class ReceiveThreadLaunchInfo
         {
@@ -87,6 +104,31 @@ namespace MUDServer
 
             s.Bind(ipLocal);
             s.Listen(4);
+
+            if(DatabaseReal == false)
+            {
+                sqliteConnection conn = null;
+
+                string MUDBase = "data.database";
+
+                sqliteConnection.CreateFile(MUDBase);
+
+                conn = new sqliteConnection("Data Source=" + MUDBase + ";Version=3;FailIfMissing=True");
+
+                try
+                {
+                    conn.Open();
+                    Console.WriteLine("Database Found");
+                    DatabaseReal = true;
+                }
+                catch (Exception ex)
+                {
+                    sqliteConnection.CreateFile(MUDBase);
+                    Console.WriteLine("Open existing DB failed: " + ex);
+                }
+
+             }
+
 
             SUD.Dungeon dungeon = new SUD.Dungeon();
             dungeon.Init();

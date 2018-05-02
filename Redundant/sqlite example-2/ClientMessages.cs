@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Collections.Concurrent;
 
-namespace MUDServer
+namespace SUD
 {
     class ClientMessageBase
     {

@@ -22,7 +22,7 @@ using sqliteCommand = System.Data.SQLite.SQLiteCommand;
 using sqliteDataReader = System.Data.SQLite.SQLiteDataReader;
 #endif
 
-namespace MUDServer
+namespace SUD
 {
     class Program
     {
@@ -30,7 +30,10 @@ namespace MUDServer
         
         static ConcurrentQueue<ClientMessageBase> clientCommand = new ConcurrentQueue<ClientMessageBase>();
 
-        static bool DatabaseReal = false;
+
+
+
+        static Dungeon dungeon;
        
 
         class ReceiveThreadLaunchInfo
@@ -105,33 +108,13 @@ namespace MUDServer
             s.Bind(ipLocal);
             s.Listen(4);
 
-            if(DatabaseReal == false)
-            {
-                sqliteConnection conn = null;
+            dungeon = new Dungeon();
 
-                string MUDBase = "data.database";
-
-                sqliteConnection.CreateFile(MUDBase);
-
-                conn = new sqliteConnection("Data Source=" + MUDBase + ";Version=3;FailIfMissing=True");
-
-                try
-                {
-                    conn.Open();
-                    Console.WriteLine("Database Found");
-                    DatabaseReal = true;
-                }
-                catch (Exception ex)
-                {
-                    sqliteConnection.CreateFile(MUDBase);
-                    Console.WriteLine("Open existing DB failed: " + ex);
-                }
-
-             }
+            dungeon.InitFromDB();
 
 
-            SUD.Dungeon dungeon = new SUD.Dungeon();
-            dungeon.Init();
+
+
 
 
             Console.WriteLine("Waiting for clients ...");

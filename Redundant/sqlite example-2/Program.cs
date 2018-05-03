@@ -27,14 +27,12 @@ namespace SUD
     class Program
     {
         static bool quit = false;
-        
+
         static ConcurrentQueue<ClientMessageBase> clientCommand = new ConcurrentQueue<ClientMessageBase>();
-
-
-
-
         static Dungeon dungeon;
-       
+        public bool DungeonCreated = false;
+
+
 
         class ReceiveThreadLaunchInfo
         {
@@ -86,13 +84,13 @@ namespace SUD
 
                     if (result > 0)
                     {
-                        clientCommand.Enqueue(new ClientMessage(receiveInfo.socket, encoder.GetString(buffer, 0, result)) );
+                        clientCommand.Enqueue(new ClientMessage(receiveInfo.socket, encoder.GetString(buffer, 0, result)));
                     }
                 }
                 catch (System.Exception)
                 {
                     clientCommand.Enqueue(new ClientLost(receiveInfo.socket));
-                    socketLost = true;                    
+                    socketLost = true;
                 }
             }
         }
@@ -102,15 +100,18 @@ namespace SUD
         {
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-			Console.WriteLine ("Running from: " + "'" + args [0] +"'");
-			IPEndPoint ipLocal = new IPEndPoint(IPAddress.Parse(args[0]), 8222);
+            Console.WriteLine("Running from: " + "'" + args[0] + "'");
+            IPEndPoint ipLocal = new IPEndPoint(IPAddress.Parse(args[0]), 8222);
 
             s.Bind(ipLocal);
             s.Listen(4);
 
             dungeon = new Dungeon();
 
-            dungeon.InitFromDB();
+
+
+
+            dungeon.Init();
 
 
 
@@ -126,12 +127,12 @@ namespace SUD
             byte[] outputBuffer;
 
             while (true)
-            {                
+            {
                 ClientMessageBase command;
 
                 if (clientCommand.TryDequeue(out command) == true)
-                {                        
-                    if(command is ClientJoined)
+                {
+                    if (command is ClientJoined)
                     {
                         try
                         {
@@ -150,6 +151,7 @@ namespace SUD
 
                             //tell all the clients that this client has entered
 
+#if false
                             foreach(var player in dungeon.socketToRoomLookup)
                             {
                                 if(player.Key != command.client)
@@ -161,17 +163,18 @@ namespace SUD
                                     catch (Exception) { }
                                 }
                             }
+#endif
                         }
                         catch (System.Exception)
-                        {                                
-                            clientCommand.Enqueue(new ClientLost(command.client));                                
+                        {
+                            clientCommand.Enqueue(new ClientLost(command.client));
                         }
                     }
 
-                    if(command is ClientMessage)
+                    if (command is ClientMessage)
                     {
-                        var clientMessage = command as ClientMessage;                            
-                            
+                        var clientMessage = command as ClientMessage;
+
                         String outputToUser = dungeon.RoomDescription(clientMessage.client);
 
                         String[] input = clientMessage.message.Split(' ');
@@ -211,6 +214,7 @@ namespace SUD
 
                                     outputBuffer = encoder.GetBytes(messageToSend);
 
+#if false
                                     foreach (var kvp in dungeon.socketToRoomLookup)
                                     {
                                         if ((kvp.Key != clientMessage.client)
@@ -225,53 +229,80 @@ namespace SUD
                                             { }
                                         }
                                     }
+#endif
                                 }
 
                                 break;
 
                             case "go":
-                                // is arg[1] sensible?
+                                var currentRoom = dungeon.GetRoom(clientMessage.client);
 
-                                bool newDestination = false;
-                                var oldRoom = dungeon.socketToRoomLookup[clientMessage.client];                                        
+                                var SQLcommand = new sqliteCommand("select * from  table_rooms where name == '" + currentRoom + "'", dungeon.conn);
+                                var reader = SQLcommand.ExecuteReader();
 
-                                if ((input[1].ToLower() == "north") && (dungeon.socketToRoomLookup[clientMessage.client].north != null))
+                                var isInNewRoom = false;
+                                var newRoom = "";
+                                while (reader.Read())
                                 {
-                                    dungeon.socketToRoomLookup[clientMessage.client] = dungeon.roomMap[dungeon.socketToRoomLookup[clientMessage.client].north];
-                                    newDestination = true;
-                                }
-                                else
-                                {
-                                    if ((input[1].ToLower() == "south") && (dungeon.socketToRoomLookup[clientMessage.client].south != null))
+
+                                    String[] temp = { "north", "south", "east", "west" };
+
+                                    for (var i = 0; i < temp.Length; i++)
                                     {
-                                        dungeon.socketToRoomLookup[clientMessage.client] = dungeon.roomMap[dungeon.socketToRoomLookup[clientMessage.client].south];
-                                        newDestination = true;
+                                        if (reader[temp[i]] != null)
+                                        {
+                                            Console.Write(reader[temp[i]] + " ");
+                                        }
+                                    }
+
+                                    if ((input[1].ToLower() == "north") && (reader["north"] != null))
+                                    {
+                                        newRoom = reader["north"].ToString();
+                                        isInNewRoom = true;
                                     }
                                     else
                                     {
-                                        if ((input[1].ToLower() == "east") && (dungeon.socketToRoomLookup[clientMessage.client].east != null))
+                                        if ((input[1].ToLower() == "south") && (reader["south"] != null))
                                         {
-                                            dungeon.socketToRoomLookup[clientMessage.client] = dungeon.roomMap[dungeon.socketToRoomLookup[clientMessage.client].east];
-                                            newDestination = true;
+                                            newRoom = reader["south"].ToString();
+                                            isInNewRoom = true;
                                         }
                                         else
                                         {
-                                            if ((input[1].ToLower() == "west") && (dungeon.socketToRoomLookup[clientMessage.client].west != null))
+                                            if ((input[1].ToLower() == "east") && (reader["east"] != null))
                                             {
-                                                dungeon.socketToRoomLookup[clientMessage.client] = dungeon.roomMap[dungeon.socketToRoomLookup[clientMessage.client].west];
-                                                newDestination = true;
+                                                newRoom = reader["east"].ToString();
+                                                isInNewRoom = true;
+                                            }
+                                            else
+                                            {
+                                                if ((input[1].ToLower() == "west") && (reader["west"] != null))
+                                                {
+                                                    newRoom = reader["west"].ToString();
+                                                    isInNewRoom = true;
+                                                }
                                             }
                                         }
                                     }
                                 }
 
-                                if (newDestination == false)
+                                if(isInNewRoom ==false)
                                 {
                                     //handle error
-                                    outputToUser += "\nERROR";
-                                    outputToUser += "\nCan not go " + input[1] + " from here";
-                                    outputToUser += "\n";
+                                    outputToUser = "\nERROR";
+                                    outputToUser+="\nCan not go " + input[1] + " from here";
+                                    outputToUser+="\nPress any key to continue";
+                            
                                 }
+                                else
+                                {
+                                    dungeon.SetClientInRoom(clientMessage.client, newRoom);
+                                    outputToUser = dungeon.RoomDescription(clientMessage.client);
+                                }
+                                break;
+                        
+                #if false
+
                                 else
                                 {
                                     var newRoom = dungeon.socketToRoomLookup[clientMessage.client];
@@ -305,8 +336,8 @@ namespace SUD
                                         }
                                     }
                                 }
-
                                 break;
+#endif
 
                             default:
                                 //handle error
@@ -321,14 +352,15 @@ namespace SUD
                             clientMessage.client.Send(encoder.GetBytes(outputToUser));
                             Console.WriteLine("Send client message: " + outputToUser);
                         }
-                        catch (Exception) { }                                                    
+                        catch (Exception) { }
                     }
 
-                    if(command is ClientLost)
+                    if (command is ClientLost)
                     {
                         var clientMessage = command as ClientLost;
 
                         Console.WriteLine("Client Lost");
+#if false
 
                         foreach (var player in dungeon.socketToRoomLookup)
                         {
@@ -344,7 +376,7 @@ namespace SUD
                                 }
                             }
                         }
-
+#endif
                         dungeon.RemoveClient(clientMessage.client);
                     }
                 }                       

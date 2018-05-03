@@ -1,12 +1,13 @@
 ﻿<Properties StartupConfiguration="{078DEAB0-D333-43A6-8521-FC49CDFBA7FB}|Default">
   <MonoDevelop.Ide.ItemProperties.sql__linux PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../../Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../Dungeon.cs">
     <Files>
       <File FileName="../../sql_example.cs" Line="57" Column="31" />
-      <File FileName="../../Program.cs" Line="139" Column="29" />
-      <File FileName="../../Dungeon.cs" Line="15" Column="9" />
+      <File FileName="../../Program.cs" Line="107" Column="25" />
+      <File FileName="../../Dungeon.cs" Line="207" Column="13" />
       <File FileName="../../ClientMessages.cs" Line="26" Column="10" />
-      <File FileName="../../Room.cs" Line="1" Column="1" />
+      <File FileName="../../Room.cs" Line="7" Column="1" />
+      <File FileName="sql_linux/Player.cs" Line="30" Column="9" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />

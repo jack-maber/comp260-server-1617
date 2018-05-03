@@ -51,6 +51,7 @@
     <Compile Include="..\..\..\Room.cs">
       <Link>Room.cs</Link>
     </Compile>
+    <Compile Include="Player.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

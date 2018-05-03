@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Net.Sockets;
+
 
 #if TARGET_LINUX
 using Mono.Data.Sqlite;
-using sqliteConnection 	=Mono.Data.Sqlite.SqliteConnection;
-using sqliteCommand 	=Mono.Data.Sqlite.SqliteCommand;
-using sqliteDataReader	=Mono.Data.Sqlite.SqliteDataReader;
+using sqliteConnection = Mono.Data.Sqlite.SqliteConnection;
+using sqliteCommand = Mono.Data.Sqlite.SqliteCommand;
+using sqliteDataReader = Mono.Data.Sqlite.SqliteDataReader;
 #endif
 
 #if TARGET_WINDOWS
@@ -22,14 +24,19 @@ namespace SUD
 {
     public class Dungeon
     {
-        sqliteConnection conn = null;
-        string databaseName = "data.database";
+        Dictionary<Socket, string> socket2player;
+        Dictionary<string, Socket> player2socket;
+        public sqliteConnection conn = null;
+        string dungeon = "DungeonBase";
 
 
-        String currentRoom = "";
+        //public String currentRoom = "";
 
         public void Init()
         {
+            socket2player = new Dictionary<Socket, string>();
+            player2socket = new Dictionary<string, Socket>();
+
             var roomMap = new Dictionary<string, Room>();
             {
                 var room = new Room("Room 0", "You are standing in the entrance hall\nAll adventures start here");
@@ -71,19 +78,22 @@ namespace SUD
                 roomMap.Add(room.name, room);
             }
 
-            //currentRoom = roomMap["Room 0"];
+
 
             try
             {
-                sqliteConnection.CreateFile(databaseName);
+                sqliteConnection.CreateFile(dungeon);
 
-                conn = new sqliteConnection("Data Source=" + databaseName + ";Version=3;FailIfMissing=True");
+                conn = new sqliteConnection("Data Source=" + dungeon + ";Version=3;FailIfMissing=True");
 
                 sqliteCommand command;
 
                 conn.Open();
 
                 command = new sqliteCommand("create table table_rooms (name varchar(20), desc varchar(20), north varchar(20), south varchar(20), west varchar(20), east varchar(20))", conn);
+                command.ExecuteNonQuery();
+
+                command = new sqliteCommand("create table table_players (name varchar(20), room varcahr(6))", conn);
                 command.ExecuteNonQuery();
 
                 foreach (var kvp in roomMap)
@@ -113,7 +123,7 @@ namespace SUD
                     }
                 }
 
-                //command = new SQLiteCommand("drop table table_phonenumbers", conn);
+
                 try
                 {
                     Console.WriteLine("");
@@ -133,66 +143,128 @@ namespace SUD
                     Console.WriteLine("Failed to display DB");
                 }
 
+                //do player stuff
+
+                {
+                    try
+                    {
+                        var sql = "insert into " + "table_players" + " (name, room) values ";
+                        sql += "('" + "player" + "'";
+                        sql += ",";
+                        sql += "'" + "Room 0" + "'";
+                        sql += ")";
+
+                        command = new sqliteCommand(sql, conn);
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to add player" + ex);
+                    }
+                }
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Create DB failed: " + ex);
             }
-
-            currentRoom = "Room 0";
         }
 
         public void SetClientInRoom(Socket client, String room)
         {
+            if (socket2player.ContainsKey(client) == false)
+            {
+                socket2player[client] = "player";
+            }
+
+            try
+            {
+                var text = "update " + "table_players" + " set room= " + "'" + room + "'" + " where name = " + "'"+socket2player[client]+"'";
+                            
+                var command = new sqliteCommand(text, conn);
+                command.ExecuteNonQuery();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+#if false
             if (socketToRoomLookup.ContainsKey(client) == false)
             {
                 socketToRoomLookup[client] = roomMap[room];
             }
+#endif
         }
 
         public void RemoveClient(Socket client)
         {
+#if false
             if (socketToRoomLookup.ContainsKey(client) == true)
             {
                 socketToRoomLookup.Remove(client);
             }
+#endif
         }
 
         public String RoomDescription(Socket client)
         {
-            String desc = "";
+            var currentRoom = GetRoom(client);
 
-            desc += socketToRoomLookup[client].desc + "\n";
-            desc += "Exits" + "\n";
-            for (var i = 0; i < socketToRoomLookup[client].exits.Length; i++)
+            var command = new sqliteCommand("select * from  table_rooms where name == '" + currentRoom + "'", conn);
+            var reader = command.ExecuteReader();
+
+            var result = "";
+
+            reader.Read();
             {
-                if (socketToRoomLookup[client].exits[i] != null)
+                result = reader["desc"] as String;
+                result += "\n";
+                result += "Exits";
+
+
+
+                if (reader["north"] as String != "")
                 {
-                    desc += Room.exitNames[i] + " ";
+                    result += " north";
                 }
-            }
 
-            var players = 0;
-
-            foreach(var kvp in socketToRoomLookup)
-            {
-                if( (kvp.Key != client)
-                  &&(kvp.Value == socketToRoomLookup[client])
-                  )
+                if (reader["west"] as String != "")
                 {
-                    players++;
+                    result += " west";
                 }
-            }
 
-            if(players > 0)
+                if (reader["south"] as String != "")
+                {
+                    result += " south";
+                }
+
+                if (reader["east"] as String != "")
+                {
+                    result += " east";
+                }
+          
+            }
+            return result+"\n";
+        }  
+
+
+        public String GetRoom(Socket client)
+        {
+            var name = socket2player[client];
+
+            var command = new sqliteCommand("select * from  table_players where name == '" + name + "'", conn);
+            var reader = command.ExecuteReader();
+
+
+            reader.Read();
             {
-                desc += "\n";
-                desc += "There are " + players + " other dungeoneers in this room";
+                return reader["room"] as string;
             }
 
-            desc += "\n";
 
-            return desc;
-        }        
+            throw new Exception();
+
+        }
     }
 }

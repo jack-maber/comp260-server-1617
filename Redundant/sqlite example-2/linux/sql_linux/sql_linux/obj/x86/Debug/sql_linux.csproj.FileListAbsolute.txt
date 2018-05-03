@@ -8,3 +8,8 @@
 /media/sf_networking/comp260-server-1617/Redundant/sqlite example-2/linux/sql_linux/sql_linux/obj/x86/Debug/sql_linux.csproj.CoreCompileInputs.cache
 /media/sf_networking/comp260-server-1617/Redundant/sqlite example-2/linux/sql_linux/sql_linux/obj/x86/Debug/sql_linux.exe
 /media/sf_networking/comp260-server-1617/Redundant/sqlite example-2/linux/sql_linux/sql_linux/obj/x86/Debug/sql_linux.pdb
+C:/Users/Asus/Documents/Uni Work/2nd Year/260/comp260-server-1617/Redundant/sqlite example-2/linux/sql_linux/sql_linux/obj/x86/Debug/sql_linux.csprojResolveAssemblyReference.cache
+C:/Users/Asus/Documents/Uni Work/2nd Year/260/comp260-server-1617/Redundant/sqlite example-2/linux/sql_linux/sql_linux/obj/x86/Debug/sql_linux.csproj.CoreCompileInputs.cache
+C:/Users/Asus/Documents/Uni Work/2nd Year/260/comp260-server-1617/Redundant/sqlite example-2/linux/sql_linux/sql_linux/obj/x86/Debug/sql_linux.exe
+C:/Users/Asus/Documents/Uni Work/2nd Year/260/comp260-server-1617/Redundant/sqlite example-2/linux/sql_linux/sql_linux/obj/x86/Debug/sql_linux.pdb
+/media/sf_networking/comp260-server-1617/Redundant/sqlite example-2/linux/sql_linux/sql_linux/obj/x86/Debug/sql_linux.csprojResolveAssemblyReference.cache

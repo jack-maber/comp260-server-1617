@@ -28,7 +28,7 @@ namespace SUD
         public Dictionary<string, Socket> player2socket;
         public sqliteConnection conn = null;
         string dungeon = "DungeonBase";
-
+        public List<String> Players = new List<string>();
 
         //public String currentRoom = "";
 
@@ -36,6 +36,7 @@ namespace SUD
         {
             socket2player = new Dictionary<Socket, string>();
             player2socket = new Dictionary<string, Socket>();
+
 
             var roomMap = new Dictionary<string, Room>();
             {
@@ -183,12 +184,12 @@ namespace SUD
 
         public void RemoveClient(Socket client)
         {
-#if false
-            if (socketToRoomLookup.ContainsKey(client) == true)
+
+            if (socket2player.ContainsKey(client) == true)
             {
-                socketToRoomLookup.Remove(client);
+                socket2player.Remove(client);
             }
-#endif
+
         }
 
         public String RoomDescription(Socket client)

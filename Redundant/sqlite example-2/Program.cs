@@ -237,22 +237,20 @@ namespace SUD
 
                                     outputBuffer = encoder.GetBytes(messageToSend);
 
-#if false
-                                    foreach (var kvp in dungeon.socketToRoomLookup)
+
+                                    foreach (var kvp in dungeon.player2socket)
                                     {
-                                        if ((kvp.Key != clientMessage.client)
-                                            && (kvp.Value == dungeon.socketToRoomLookup[clientMessage.client])
-                                            )
-                                        {
+                                       
+
                                             try
                                             {
-                                                kvp.Key.Send(outputBuffer);
+                                                kvp.Value.Send(outputBuffer);
                                             }
                                             catch (Exception)
                                             { }
-                                        }
+
                                     }
-#endif
+
                                 }
 
                                 break;

@@ -24,8 +24,8 @@ namespace SUD
 {
     public class Dungeon
     {
-        Dictionary<Socket, string> socket2player;
-        Dictionary<string, Socket> player2socket;
+        public Dictionary<Socket, string> socket2player;
+        public Dictionary<string, Socket> player2socket;
         public sqliteConnection conn = null;
         string dungeon = "DungeonBase";
 
@@ -145,23 +145,7 @@ namespace SUD
 
                 //do player stuff
 
-                {
-                    try
-                    {
-                        var sql = "insert into " + "table_players" + " (name, room) values ";
-                        sql += "('" + "player" + "'";
-                        sql += ",";
-                        sql += "'" + "Room 0" + "'";
-                        sql += ")";
 
-                        command = new sqliteCommand(sql, conn);
-                        command.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Failed to add player" + ex);
-                    }
-                }
 
             }
             catch (Exception ex)

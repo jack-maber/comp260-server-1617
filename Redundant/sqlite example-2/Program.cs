@@ -54,14 +54,37 @@ namespace SUD
 
             while (quit == false)
             {
+                var command = new sqliteCommand("select * from " + "table_rooms" + " order by name asc", dungeon.conn);
                 var newClientSocket = s.Accept();
 
                 var myThread = new Thread(clientReceiveThread);
                 myThread.Start(new ReceiveThreadLaunchInfo(ID, newClientSocket));
 
                 ID++;
+                dungeon.socket2player.Add(newClientSocket,"player"+ID);
+                dungeon.player2socket.Add("player" + ID, newClientSocket);
 
                 clientCommand.Enqueue(new ClientJoined(newClientSocket));
+
+                {
+                    try
+                    {
+                        var sql = "insert into " + "table_players" + " (name, room) values ";
+                        sql += "('" + "player" + ID + "'";
+                        sql += ",";
+                        sql += "'" + "Room 0" + "'";
+                        sql += ")";
+
+                        command = new sqliteCommand(sql, dungeon.conn);
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to add player" + ex);
+                    }
+                }
+
+
 
                 Console.WriteLine("Client added");
             }

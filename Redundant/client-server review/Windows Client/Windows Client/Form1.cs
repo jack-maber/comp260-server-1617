@@ -83,7 +83,7 @@ namespace Part_03_FormClient
                 try
                 {
                     form.client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    form.client.Connect(new IPEndPoint(IPAddress.Parse("10.2.153.159"), 8222));
+                    form.client.Connect(new IPEndPoint(IPAddress.Parse("165.227.238.191"), 8222));
                     form.bConnected = true;
                     form.AddOutputText("Connected to server");
 

@@ -141,7 +141,7 @@ namespace SUD
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Failed to display DB");
+                    Console.WriteLine("Failed to display DB" + ex);
                 }
 
                 //do player stuff

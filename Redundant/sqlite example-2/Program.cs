@@ -123,8 +123,8 @@ namespace SUD
         {
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            Console.WriteLine("Running from: " + "'" + args[0] + "'");
-            IPEndPoint ipLocal = new IPEndPoint(IPAddress.Parse(args[0]), 8222);
+            //Console.WriteLine("Running from: " + "'" + args[0] + "'");
+            IPEndPoint ipLocal = new IPEndPoint(IPAddress.Parse("165.227.238.191"), 8222);
 
             s.Bind(ipLocal);
             s.Listen(4);

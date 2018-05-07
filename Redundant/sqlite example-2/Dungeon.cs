@@ -30,14 +30,13 @@ namespace SUD
         string dungeon = "DungeonBase";
         public List<String> Players = new List<string>();
 
-        //public String currentRoom = "";
-
         public void Init()
         {
+            //2 Dictonaries for reverse lookups
             socket2player = new Dictionary<Socket, string>();
             player2socket = new Dictionary<string, Socket>();
 
-
+            //Creates the room map
             var roomMap = new Dictionary<string, Room>();
             {
                 var room = new Room("Room 0", "You are standing in the entrance hall\nAll adventures start here");
@@ -80,7 +79,7 @@ namespace SUD
             }
 
 
-
+            //Creates dungeon table from original roommap
             try
             {
                 sqliteConnection.CreateFile(dungeon);
@@ -117,14 +116,14 @@ namespace SUD
 
                         command = new sqliteCommand(sql, conn);
                         command.ExecuteNonQuery();
-                    }
+                    } //If it fails throw an exception
                     catch (Exception ex)
                     {
                         Console.WriteLine("Failed to add room" + ex);
                     }
                 }
 
-
+                //Writes the current room to the server
                 try
                 {
                     Console.WriteLine("");
@@ -147,7 +146,7 @@ namespace SUD
                 //do player stuff
 
 
-
+            //If the database fails to create throw an exception   
             }
             catch (Exception ex)
             {
@@ -155,6 +154,7 @@ namespace SUD
             }
         }
 
+        //Used to set the players in the room when they move
         public void SetClientInRoom(Socket client, String room)
         {
             if (socket2player.ContainsKey(client) == false)
@@ -174,14 +174,10 @@ namespace SUD
                 Console.WriteLine(ex);
             }
 
-#if false
-            if (socketToRoomLookup.ContainsKey(client) == false)
-            {
-                socketToRoomLookup[client] = roomMap[room];
-            }
-#endif
+
         }
 
+        //Removes the player from the socket dictionary
         public void RemoveClient(Socket client)
         {
 
@@ -191,7 +187,7 @@ namespace SUD
             }
 
         }
-
+        //Gives the player the description of the room they are in 
         public String RoomDescription(Socket client)
         {
             var currentRoom = GetRoom(client);
@@ -233,7 +229,7 @@ namespace SUD
             return result+"\n";
         }  
 
-
+        //Gets the room of the player so that it can be cross referenced
         public String GetRoom(Socket client)
         {
             var name = socket2player[client];

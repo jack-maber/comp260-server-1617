@@ -27,13 +27,12 @@ namespace SUD
     class Program
     {
         static bool quit = false;
-
         static ConcurrentQueue<ClientMessageBase> clientCommand = new ConcurrentQueue<ClientMessageBase>();
         static Dungeon dungeon;
         public bool DungeonCreated = false;
 
 
-
+        //Gives the conneceted player an ID and a socket
         class ReceiveThreadLaunchInfo
         {
             public ReceiveThreadLaunchInfo(int ID, Socket socket)
@@ -45,13 +44,13 @@ namespace SUD
             public int ID;
             public Socket socket;
         }
-
+        //Opens the accept thread and inserts the player into the dungeon
         static void acceptClientThread(Object obj)
         {
             Socket s = obj as Socket;
 
             int ID = 0;
-
+            //While the server is still live, this will continue to run
             while (quit == false)
             {
                 var command = new sqliteCommand("select * from " + "table_rooms" + " order by name asc", dungeon.conn);
@@ -60,14 +59,14 @@ namespace SUD
                 var myThread = new Thread(clientReceiveThread);
                 myThread.Start(new ReceiveThreadLaunchInfo(ID, newClientSocket));
 
-                ID++;
+                ID++; //Iterates on the ID so that no two players have the same one
                 dungeon.socket2player.Add(newClientSocket,"player"+ID);
                 dungeon.player2socket.Add("player" + ID, newClientSocket);
 
                 clientCommand.Enqueue(new ClientJoined(newClientSocket));
 
                 {
-                    try
+                    try //Inserts the player into room zero, I.E. starting room
                     {
                         var sql = "insert into " + "table_players" + " (name, room) values ";
                         sql += "('" + "player" + ID + "'";
@@ -86,10 +85,10 @@ namespace SUD
 
 
 
-                Console.WriteLine("Client added");
+                Console.WriteLine("Client added"); //Prints to the server that a client has been added
             }
         }
-
+        //Gets the player socket and then receives the info they are sending back for processing 
         static void clientReceiveThread(Object obj)
         {
             ReceiveThreadLaunchInfo receiveInfo = obj as ReceiveThreadLaunchInfo;
@@ -97,7 +96,7 @@ namespace SUD
             ASCIIEncoding encoder = new ASCIIEncoding();
             bool socketLost = false;
 
-            while ((quit == false) && (socketLost == false))
+            while ((quit == false) && (socketLost == false)) //Only runs while the player is connected and the server is still live
             {
                 byte[] buffer = new byte[4096];
 
@@ -118,32 +117,23 @@ namespace SUD
             }
         }
 
-
+        //Main gameplay loop
         static void Main(string[] args)
         {
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            //Console.WriteLine("Running from: " + "'" + args[0] + "'");
-            IPEndPoint ipLocal = new IPEndPoint(IPAddress.Parse("165.227.238.191"), 8222);
+            Console.WriteLine("Running from: " + "'" + "165.227.238.191" + "'");
+            IPEndPoint ipLocal = new IPEndPoint(IPAddress.Parse("165.227.238.191"), 8222); //Uses the IP of the server so that players can connect
 
             s.Bind(ipLocal);
             s.Listen(4);
 
-            dungeon = new Dungeon();
-
-
-
-
+            dungeon = new Dungeon(); //Creates a new dungeon the initates it
             dungeon.Init();
-
-
-
-
-
 
             Console.WriteLine("Waiting for clients ...");
 
-            var myThread = new Thread(acceptClientThread);
+            var myThread = new Thread(acceptClientThread); //This allows it to take in player commands
             myThread.Start(s);
 
             ASCIIEncoding encoder = new ASCIIEncoding();
@@ -159,34 +149,19 @@ namespace SUD
                     {
                         try
                         {
-                            dungeon.SetClientInRoom(command.client, "Room 0");
+                            dungeon.SetClientInRoom(command.client, "Room 0"); //Set the player in room 0
                             String dungeonOutput = dungeon.RoomDescription(command.client);
 
                             dungeonOutput += "type 'help' for help\n";
 
                             try
                             {
-                                command.client.Send(encoder.GetBytes(dungeonOutput));
+                                command.client.Send(encoder.GetBytes(dungeonOutput)); //Sends the player the dungeon output
                             }
                             catch (Exception) { }
 
                             Console.WriteLine("Send client welcome: " + dungeonOutput);
 
-                            //tell all the clients that this client has entered
-
-#if false
-                            foreach(var player in dungeon.socketToRoomLookup)
-                            {
-                                if(player.Key != command.client)
-                                {
-                                    try
-                                    {
-                                        player.Key.Send(encoder.GetBytes("A new dungeoneer has entered\n"));
-                                    }
-                                    catch (Exception) { }
-                                }
-                            }
-#endif
                         }
                         catch (System.Exception)
                         {
@@ -194,17 +169,17 @@ namespace SUD
                         }
                     }
 
-                    if (command is ClientMessage)
+                    if (command is ClientMessage) //Runs through the client reply and executes the command they want
                     {
                         var clientMessage = command as ClientMessage;
 
                         String outputToUser = dungeon.RoomDescription(clientMessage.client);
 
-                        String[] input = clientMessage.message.Split(' ');
+                        String[] input = clientMessage.message.Split(' '); //splits the input up
 
-                        switch (input[0].ToLower())
+                        switch (input[0].ToLower()) //changes it to lower case so that it is easier to parse
                         {
-                            case "help":
+                            case "help": //GIves user help such as other commands
                                 outputToUser += "\nCommands are ....\n";
                                 outputToUser += "help - for this screen\n";
                                 outputToUser += "look - to look around\n";
@@ -214,11 +189,11 @@ namespace SUD
 
                                 break;
 
-                            case "look":
+                            case "look": //Gives the user a description of there current room 
                                 outputToUser = dungeon.RoomDescription(clientMessage.client);
                                 break;
 
-                            case "say":
+                            case "say": //Activates global chat
                                 outputToUser += "\nYou say: ";
                                 for (var i = 1; i < input.Length; i++)
                                 {
@@ -240,22 +215,19 @@ namespace SUD
 
                                     foreach (var kvp in dungeon.player2socket)
                                     {
-                                       
-
                                             try
                                             {
                                                 kvp.Value.Send(outputBuffer);
                                             }
                                             catch (Exception)
                                             { }
-
                                     }
 
                                 }
 
                                 break;
 
-                            case "go":
+                            case "go": //Allows the players to move around the dungeon
                                 var currentRoom = dungeon.GetRoom(clientMessage.client);
 
                                 var SQLcommand = new sqliteCommand("select * from  table_rooms where name == '" + currentRoom + "'", dungeon.conn);
@@ -266,7 +238,7 @@ namespace SUD
                                 while (reader.Read())
                                 {
 
-                                    String[] temp = { "north", "south", "east", "west" };
+                                    String[] temp = { "north", "south", "east", "west" }; //Compares the player input of a room to the string of existing rooms
 
                                     for (var i = 0; i < temp.Length; i++)
                                     {
@@ -276,7 +248,7 @@ namespace SUD
                                         }
                                     }
 
-                                    if ((input[1].ToLower() == "north") && (reader["north"] != null))
+                                    if ((input[1].ToLower() == "north") && (reader["north"] != null)) //Checks if the move is valid against the current position of the room the player is in
                                     {
                                         newRoom = reader["north"].ToString();
                                         isInNewRoom = true;
@@ -307,7 +279,7 @@ namespace SUD
                                     }
                                 }
 
-                                if(isInNewRoom ==false)
+                                if(isInNewRoom ==false) //If the player inputs an invalid room, inform them of that
                                 {
                                     //handle error
                                     outputToUser = "\nERROR";
@@ -315,52 +287,16 @@ namespace SUD
                                     outputToUser+="\nPress any key to continue";
                             
                                 }
-                                else
+                                else //otherwise set them in said room, then send them the new room description
                                 {
                                     dungeon.SetClientInRoom(clientMessage.client, newRoom);
                                     outputToUser = dungeon.RoomDescription(clientMessage.client);
                                 }
                                 break;
                         
-                #if false
 
-                                else
-                                {
-                                    var newRoom = dungeon.socketToRoomLookup[clientMessage.client];
 
-                                    outputToUser = dungeon.RoomDescription(clientMessage.client);
-
-                                    foreach (var kvp in dungeon.socketToRoomLookup)
-                                    {
-                                        if ((kvp.Key != clientMessage.client)
-                                            && (kvp.Value == oldRoom)
-                                            )
-                                        {
-                                            try
-                                            {
-                                                kvp.Key.Send(encoder.GetBytes("A dungeoneer has left this room\n"));
-                                            }
-                                            catch (Exception)
-                                            { }
-                                        }
-
-                                        if ((kvp.Key != clientMessage.client)
-                                            && (kvp.Value == newRoom)
-                                            )
-                                        {
-                                            try
-                                            {
-                                                kvp.Key.Send(encoder.GetBytes("A dungeoneer has entered this room\n"));
-                                            }
-                                            catch (Exception)
-                                            { }
-                                        }
-                                    }
-                                }
-                                break;
-#endif
-
-                            default:
+                            default: //More general error throw
                                 //handle error
                                 outputToUser += "\nERROR";
                                 outputToUser += "\nCan not " + clientMessage.message;
@@ -368,7 +304,7 @@ namespace SUD
                                 break;
                         }
 
-                        try
+                        try //Sends message back to client
                         {
                             clientMessage.client.Send(encoder.GetBytes(outputToUser));
                             Console.WriteLine("Send client message: " + outputToUser);
@@ -376,28 +312,12 @@ namespace SUD
                         catch (Exception) { }
                     }
 
-                    if (command is ClientLost)
+                    if (command is ClientLost) //If the client disconnect, state that, and then remove them from the dungeon
                     {
                         var clientMessage = command as ClientLost;
 
                         Console.WriteLine("Client Lost");
-#if false
 
-                        foreach (var player in dungeon.socketToRoomLookup)
-                        {
-                            if (player.Key != command.client)
-                            {
-                                try
-                                {
-                                    player.Key.Send(encoder.GetBytes("A dungeoneer has left the dungeon\n"));
-                                }
-                                catch(Exception)
-                                {
-
-                                }
-                            }
-                        }
-#endif
                         dungeon.RemoveClient(clientMessage.client);
                     }
                 }                       
